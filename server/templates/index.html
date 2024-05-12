@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Date and Hour Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="date"],
+        input[type="time"],
+        input[type="text"],
+        input[type="file"],
+        input[type="checkbox"],
+        input[type="submit"] {
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        .existing-events-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .form-row label {
+            margin-bottom: 5px;
+        }
+
+        .form-row input {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="/events" class="existing-events-button">Existing Events</a>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-row">
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+
+        <div class="form-row">
+            <label for="start_time">Start Time:</label>
+            <input type="time" id="start_time" name="start_time" required>
+        </div>
+
+        <div class="form-row">
+            <label for="durata">Duration:</label>
+            <input type="text" id="durata" name="durata" required>
+        </div>
+
+        <div class="form-row">
+            <label for="file1">File 1:</label>
+            <input type="file" id="file1" name="file1" multiple>
+        </div>
+
+        <div class="form-row">
+            <label for="file2">File 2:</label>
+            <input type="file" id="file2" name="file2" multiple>
+        </div>
+
+        <div class="form-row">
+            <label for="file3">File 3:</label>
+            <input type="file" id="file3" name="file3" multiple>
+        </div>
+
+        <div class="form-row">
+            <label for="compiler">Compiler:</label>
+            <input type="checkbox" id="compiler" name="compiler">
+        </div>
+
+        <br> <!-- Add a line break here -->
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

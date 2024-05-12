@@ -1,0 +1,44 @@
+from datetime import datetime
+import requests
+import os
+
+serverip = "127.0.0.1"
+serverport = 5000
+
+def server_crawl():
+    response = requests.get(f"http://{serverip}:{serverport}/api")
+    events = response.json()
+    for event in events:
+        folder = event['folder']
+        files = event['files']
+        
+        if datetime_difference(current_datetime(), folder_datetime(folder)) = 0 or datetime_difference(current_datetime(), folder_datetime(folder)) >   :
+            print(f"Found event folder {folder} with files: {files}")
+            for file in files:
+                print(f"Downloading file {file}")
+                response = requests.get(f"http://{serverip}:{serverport}/events/{folder}/{file}")
+                with open(f"{folder}/{file}", "wb") as f:
+                    f.write(response.content)
+        else:
+            print(f"Skipping event folder {folder}")
+
+    if not events:
+        print("No events found on the server")
+        
+
+
+def folder_datetime(folder):
+    return folder[-8:]
+
+def current_datetime():
+    return datetime.now().strftime('%d%m%H%M')
+
+
+def datetime_difference(datetime1, datetime2):
+    datetime1 = datetime.strptime(datetime1, '%d%m%H%M')
+    datetime2 = datetime.strptime(datetime2, '%d%m%H%M')
+    difference = datetime1 - datetime2
+    difference_in_hours = -difference.total_seconds() / 3600
+    print(difference_in_hours)
+
+datetime_difference(current_datetime(), folder_datetime("event_asd_14050105"))
