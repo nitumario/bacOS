@@ -35,5 +35,20 @@ def wait_for_event(event):
 def start_event(event):
     make_workspace(event)
     
+def start_ide(event):
+    response = requests.get(f"http://{serverip}:{serverport}/api")
+    response = response.json()
+    pdf_files = []
+    for x in response:
+        if(x['folder'] == event):
+            for file in x['files']:
+                if(file.endswith(".pdf")):
+                    pdf_files.append(file)
+
+    pdf_files = " ".join(pdf_files)
+
+
+
+
 #print(datetime_difference(current_datetime(), folder_datetime("event_asd_14050105")))
-#start_event('event_h_05050808')
+start_ide('event_asd_14051212')

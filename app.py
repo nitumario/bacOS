@@ -19,7 +19,7 @@ def api():
 
     event_list.sort(key=lambda e: get_event_start_datetime(e['folder']))
 
-    return jsonify(event_list)
+    return jsonify(event_list), 200
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -111,5 +111,4 @@ def download_file(event_folder, file):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
-
+    app.run(host = '192.168.1.7', port=80, debug=True)
