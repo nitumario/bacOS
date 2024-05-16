@@ -1,54 +1,80 @@
 from datetime import datetime
 import requests
 import os
+import time
+import subprocess
 
-serverip = "127.0.0.1"
-serverport = 5000
+class Event:
+    def __init__(self, ip, nume):
+        self.ip = ip
+        self.serverport = 80
+        self.nume = nume
+        self.path = f"~/Desktop/{self.nume}/"
+        api_json = requests.get(f"http://{self.ip}:{self.serverport}/api")
+        api_json = api_json.json()
+        self.subiecte = []
+        for subiecte in api_json:
+            if subiecte['folder'] == self.nume:
+                for fisier in subiecte['files']:
+                    if fisier.endswith(".pdf"):
+                        self.subiecte.append(f"{fisier}")
 
-def make_workspace(event):
-    url = f"http://{serverip}:{serverport}/events/{event}/{event}.json"
-    response = requests.get(url)
-    file_content = response.content
-    os.mkdir(event)
-    response = requests.get(f"http://{serverip}:{serverport}/events/{event}/")
-    files = response.json()
-    for file in files:
-        file_url = f"http://{serverip}:{serverport}/events/{event}/{file}"
-        response = requests.get(file_url)
+        self.subiecte_wpath = []
+
+        for subiecte in api_json:
+            if subiecte['folder'] == self.nume:
+                for fisier in subiecte['files']:
+                    if fisier.endswith(".pdf"):
+                        self.subiecte_wpath.append(f"{self.path}{fisier[:-4]}/{fisier}")
+
+    def wait(self):
+        process = None
+        while True:
+            response = requests.get(f"http://{self.ip}:{self.serverport}/events/{self.nume}/{self.nume}.json")
+            if response.status_code == 423 and process is None:
+                process = subprocess.Popen(["python3", "waiting.py"])
+            elif response.status_code == 200:
+                if process is not None:
+                    process.terminate()
+                self.start()
+                break  
+            time.sleep(1)  
+
+    def make_workspace(self):
+        url = f"http://{self.ip}:{self.serverport}/events/{self.nume}/{self.nume}.json"
+        response = requests.get(url)
         file_content = response.content
-        with open(f"{event}/{file}", "wb") as file:
-            file.write(file_content)
+        self.path = os.path.expanduser(self.path)
+        os.mkdir(self.path)
 
-def get_first_event():
-    response = requests.get(f"http://{serverip}:{serverport}/api")
-    event_list = response.json()
-    return event_list[0]['folder']
+        for subiect, subiect_wopath in zip(self.subiecte_wpath, self.subiecte):
+            subiect_folder = os.path.join(self.path, os.path.basename(subiect)[:-4])
+            os.mkdir(subiect_folder)
+            cpp_filename = os.path.join(subiect_folder, os.path.basename(subiect_folder) + ".cpp")
+            with open(cpp_filename, 'w') as cpp_file:
+                cpp_file.write("\n")
+            file_url = f"http://{self.ip}:{self.serverport}/events/{self.nume}/{subiect_wopath}"
+            subprocess.run(["wget", "-P", subiect_folder, file_url]) 
 
+    def start_ide(self):
+        self.durata = None
+        self.compiler = None
+        response = requests.get(f"http://{self.ip}:{self.serverport}/events/{self.nume}/{self.nume}.json")
+        event_data = response.json()
+        self.durata = event_data['durata']
+        self.compiler = event_data['compiler']
 
-def wait_for_event(event):
-    response = requests.get(f"http://{serverip}:{serverport}/api/events/{event}.json")
-    while(response.status_code == 423):
-        os.run("./waiting.sh")
-    if(response.status_code == 200):
-        start_event(event)
+        cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
+        file_paths_str = " ".join([os.path.abspath(path) for path in cpp_file_paths])
+        print("codeblocks", file_paths_str)
 
-def start_event(event):
-    make_workspace(event)
-    
-def start_ide(event):
-    response = requests.get(f"http://{serverip}:{serverport}/api")
-    response = response.json()
-    pdf_files = []
-    for x in response:
-        if(x['folder'] == event):
-            for file in x['files']:
-                if(file.endswith(".pdf")):
-                    pdf_files.append(file)
+        ide = subprocess.Popen(["codeblocks", *cpp_file_paths])
+        time.sleep(int(self.durata) * 60)  
+        ide.terminate()
 
-    pdf_files = " ".join(pdf_files)
+    def start(self):
+        self.make_workspace()
+        self.start_ide()
 
-
-
-
-#print(datetime_difference(current_datetime(), folder_datetime("event_asd_14050105")))
-start_ide('event_asd_14051212')
+olimpiada = Event("192.168.1.7", "event_asdas_17050240")
+olimpiada.wait()

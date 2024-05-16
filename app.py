@@ -56,7 +56,7 @@ def index():
             "compiler": compiler
         }
 
-        with open(f"{directory}/event{ziua_start}{luna_start}{ora_start}{minut_start}.json", "w") as f:
+        with open(f"{directory}/event_{name}_{ziua_start}{luna_start}{ora_start}{minut_start}.json", "w") as f:
             json.dump(event_data, f)
 
         for i in range(1, 4):
@@ -104,9 +104,9 @@ def download_file(event_folder, file):
     if time_difference*60 < 0:
         # return send_from_directory(event_folder, file)
         return (f"Acest eveniment incepe in {int(time_difference)} ore si {int((time_difference* 60)%60)} minute", 423)
-    elif time_difference*60 > 5:
+    elif time_difference*60 > 100000:
         return 'Acest eveniment s-a terminat', 423
-    elif time_difference*60 < 5 and time_difference >= 0:
+    elif time_difference*60 < 100 and time_difference >= 0:
         return send_from_directory(event_folder, file)
 
 
