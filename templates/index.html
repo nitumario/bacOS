@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Start Date and Hour Form</title>
+    <title>bacOS admin</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             margin: 0;
             padding: 20px;
+            background-color: #18122B;
         }
 
         form {
-            max-width: 400px;
+            max-width: 500px;
+            top: 50%;
             margin: 0 auto;
-            background-color: #f2f2f2;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #443C68;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -25,26 +30,61 @@
             display: block;
             margin-bottom: 10px;
             font-weight: bold;
+            color: #9888cd;
+            text-align: center;
         }
 
         input[type="date"],
         input[type="time"],
-        input[type="text"],
-        input[type="file"],
-        input[type="checkbox"],
-        input[type="submit"] {
+        input[type="text"]{
             margin-bottom: 10px;
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border-radius: 10px;
             box-sizing: border-box;
+            font-weight: bold;
+            text-align: center;
+
         }
 
-        input[type="submit"] {
-            background-color: #4CAF50;
+        input[type="file"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-weight: bold;
+
+        }
+
+        input[type="checkbox"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            accent-color: #ffffff;
+            color: #FFFFFF;
+
+        }
+
+        .submit-button {
+            background-color: #9888cd;
             color: white;
             cursor: pointer;
+            margin-bottom: 10px;
+            width: 200%;
+            padding: 10px;
+            border-radius:10px;
+            box-sizing: border-box;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-size: 15px;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .submit-button:hover {
+            background-color: #5e46ad;
         }
 
         .existing-events-button {
@@ -66,54 +106,69 @@
         .form-row input {
             margin-bottom: 10px;
         }
+
+        
+        .existing-events-button {
+            padding: 12px 24px;
+            background-color: black;
+            color: white;
+            border-radius: 7px;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+            animation: pulse 1.75s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        @keyframes pulse {
+            to {
+                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+            }
+        }
+
+        p{
+            font-size: 58px;
+            color: #9888cd;
+            text-align: center;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
+    <p>bacOS</p>
     <a href="/events" class="existing-events-button">Existing Events</a>
     <form action="/" method="post" enctype="multipart/form-data">
         <div class="form-row">
-            <label for="name">Name:</label>
+            <label for="name">Numele evenimentului</label>
             <input type="text" id="name" name="name" required>
         </div>
 
         <div class="form-row">
-            <label for="start_date">Start Date:</label>
+            <label for="start_date">Data pornirii</label>
             <input type="date" id="start_date" name="start_date" required>
         </div>
 
         <div class="form-row">
-            <label for="start_time">Start Time:</label>
+            <label for="start_time">Ora pornirii</label>
             <input type="time" id="start_time" name="start_time" required>
         </div>
 
         <div class="form-row">
-            <label for="durata">Duration:</label>
+            <label for="durata">Durație</label>
             <input type="text" id="durata" name="durata" required>
         </div>
 
         <div class="form-row">
-            <label for="file1">File 1:</label>
+            <label for="file1">Fișier 1</label>
             <input type="file" id="file1" name="file1" multiple>
         </div>
 
-        <div class="form-row">
-            <label for="file2">File 2:</label>
-            <input type="file" id="file2" name="file2" multiple>
-        </div>
-
-        <div class="form-row">
-            <label for="file3">File 3:</label>
-            <input type="file" id="file3" name="file3" multiple>
-        </div>
-
-        <div class="form-row">
-            <label for="compiler">Compiler:</label>
+        <div class="form-row browse-button">
+            <label for="compiler">Compilator?</label>
             <input type="checkbox" id="compiler" name="compiler">
         </div>
 
-        <br> <!-- Add a line break here -->
+        <input class = "submit-button" type="submit" value="Trimite">
 
-        <input type="submit" value="Submit">
-    </form>
+    </form>      
 </body>
 </html>
