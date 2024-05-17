@@ -3,12 +3,16 @@ import requests
 import os
 import time
 import subprocess
+import tkinter as tk
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 
 class Event:
     def __init__(self, ip, nume):
         self.ip = ip
         self.serverport = 80
         self.nume = nume
+        self.username = None
         self.path = f"~/Desktop/{self.nume}/"
         api_json = requests.get(f"http://{self.ip}:{self.serverport}/api")
         api_json = api_json.json()
@@ -66,15 +70,57 @@ class Event:
 
         cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
         file_paths_str = " ".join([os.path.abspath(path) for path in cpp_file_paths])
-        print("codeblocks", file_paths_str)
+        ide = subprocess.Popen(["codeblocks", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        ide = subprocess.Popen(["codeblocks", *cpp_file_paths])
-        time.sleep(int(self.durata) * 60)  
+        #pdfs = ' '.join(self.subiecte_wpath)
+        #pdfs = os.path.expanduser(pdfs)
+        pdfs = []
+        for pdf in self.subiecte_wpath:
+            pdfs.append(os.path.expanduser(pdf))
+        pdfs = ' '.join(pdfs)
+        print("evince", pdfs)
+        pdf_viewer = subprocess.Popen(["evince " + pdfs], shell = True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(float(self.durata) * 60)  
         ide.terminate()
+        pdf_viewer.terminate()
+        process = subprocess.Popen(["python3", "stop.py"])
+        time.sleep(5)
+        
+        process.terminate()
 
     def start(self):
         self.make_workspace()
         self.start_ide()
 
-olimpiada = Event("192.168.1.7", "event_asdas_17050240")
-olimpiada.wait()
+app = QApplication([])
+window = QMainWindow()
+window.setWindowTitle("Event Start")
+window.setGeometry(100, 100, 300, 150)
+
+widget = QWidget()
+layout = QVBoxLayout()
+
+label = QLabel()
+label.setText("Codul evenimentului:")
+layout.addWidget(label)
+
+input_box = QLineEdit()
+layout.addWidget(input_box)
+
+button = QPushButton()
+button.setText("Porneste evenimentul")
+layout.addWidget(button)
+
+def start_event():
+    event_name = input_box.text()
+    event = Event("192.168.1.7", event_name)
+    event.wait()
+    window.close()  
+
+button.clicked.connect(start_event)
+
+widget.setLayout(layout)
+window.setCentralWidget(widget)
+
+window.show()
+app.exec()

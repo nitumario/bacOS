@@ -59,8 +59,8 @@ def index():
         with open(f"{directory}/event_{name}_{ziua_start}{luna_start}{ora_start}{minut_start}.json", "w") as f:
             json.dump(event_data, f)
 
-        for i in range(1, 4):
-            file = request.files.get(f'file{i}')
+        files = request.files.getlist('file1')
+        for file in files:
             if file:
                 file.save(os.path.join(directory, file.filename))
 
