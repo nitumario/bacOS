@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Creează eveniment</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #18122B;
+        }
+
+        form {
+            max-width: 500px;
+            top: 50%;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #443C68;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #9888cd;
+            text-align: center;
+        }
+
+        input[type="date"],
+        input[type="time"],
+        input[type="text"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-weight: bold;
+            text-align: center;
+
+        }
+
+        input[type="file"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-weight: bold;
+
+        }
+
+        input[type="checkbox"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            accent-color: #ffffff;
+            color: #FFFFFF;
+
+        }
+
+        .submit-button {
+            background-color: #9888cd;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+            width: 200%;
+            padding: 10px;
+            border-radius:10px;
+            box-sizing: border-box;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-size: 15px;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .submit-button:hover {
+            background-color: #5e46ad;
+        }
+
+        .existing-events-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+
+        .form-row label {
+            margin-bottom: 5px;
+        }
+
+        .form-row input {
+            margin-bottom: 10px;
+        }
+
+        
+        .existing-events-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            margin: 10px;
+            padding: 12px 24px;
+            background-color: #27126d;
+            color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+            animation: pulse 1.75s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        @keyframes pulse {
+            to {
+                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+            }
+        }
+
+        p{
+            font-size: 58px;
+            color: #9888cd;
+            text-align: center;
+            margin-top: 10px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <p>bacOS</p>
+    <a href="/events" class="existing-events-button">Existing Events</a>
+    <form action="/creare" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+            <label for="name">Numele evenimentului</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-row">
+            <label for="start_date">Data pornirii</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
+
+        <div class="form-row">
+            <label for="start_time">Ora pornirii</label>
+            <input type="time" id="start_time" name="start_time" required>
+        </div>
+
+        <div class="form-row">
+            <label for="durata">Durație</label>
+            <input type="text" id="durata" name="durata" required>
+        </div>
+
+        <div class="form-row">
+            <label for="file1">Fișier 1</label>
+            <input type="file" id="file1" name="file1" multiple>
+        </div>
+
+        <div class="form-row">
+            <label for="file2">Fișier 2</label>
+            <input type="file" id="file2" name="file2" multiple>
+        </div>
+
+        <div class="form-row">
+            <label for="file3">Fișier 3</label>
+            <input type="file" id="file3" name="file3" multiple>
+        </div>
+
+        <div class="form-row browse-button">
+            <label for="compiler">Compilator?</label>
+            <input type="checkbox" id="compiler" name="compiler">
+        </div>
+
+        <input class="submit-button" type="submit" value="Trimite">
+    </form>
+</body>
+</html>
