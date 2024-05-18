@@ -1,297 +1,174 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bine ai (re)venit!</title>
+    <title>bacOS admin</title>
     <style>
-
-        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
-
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            background: #18122B;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
             font-family: 'Montserrat', sans-serif;
-            height: 100vh;
-            margin: -20px 0 50px;
-        }
-
-        h1 {
-            font-weight: bold;
             margin: 0;
-        }
-
-        h2 {
-            text-align: center;
-            color: #9888cd;
-        }
-
-        p {
-            font-size: 14px;
-            font-weight: 100;
-            line-height: 20px;
-            letter-spacing: 0.5px;
-            margin: 20px 0 30px;
-        }
-
-        span {
-            font-size: 12px;
-        }
-
-        a {
-            color: #333;
-            font-size: 14px;
-            text-decoration: none;
-            margin: 15px 0;
-        }
-
-        button {
-            border-radius: 10px;
-            border: 1px solid #9888cd;
-            background-color: #9888cd;
-            color: #FFFFFF;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 12px 45px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: transform 80ms ease-in;
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        button:focus {
-            outline: none;
-        }
-
-        button.ghost {
-            background-color: transparent;
-            border-color: #FFFFFF;
+            padding: 20px;
+            background-color: #18122B;
         }
 
         form {
-            background-color: #FFFFFF;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 50px;
-            height: 100%;
+            max-width: 500px;
+            top: 50%;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #443C68;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #9888cd;
             text-align: center;
         }
 
-        input {
-            background-color: #eee;
-            border: 1px solid #9888cd;
-            padding: 12px 15px;
-            margin: 8px 0;
+        input[type="date"],
+        input[type="time"],
+        input[type="text"]{
+            margin-bottom: 10px;
             width: 100%;
+            padding: 10px;
             border-radius: 10px;
-            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+            font-weight: bold;
+            text-align: center;
+
         }
 
-        .container {
-            background-color: #fff;
+        input[type="file"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
             border-radius: 10px;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
-                    0 10px 10px rgba(0,0,0,0.22);
-            position: relative;
-            overflow: hidden;
-            width: 768px;
-            max-width: 100%;
-            min-height: 480px;
+            box-sizing: border-box;
+            font-weight: bold;
+
         }
 
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
+        input[type="checkbox"]{
+            margin-bottom: 10px;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            accent-color: #ffffff;
+            color: #FFFFFF;
+
+        }
+
+        .submit-button {
+            background-color: #9888cd;
+            color: white;
+            cursor: pointer;
+            margin-bottom: 10px;
+            width: 200%;
+            padding: 10px;
+            border-radius:10px;
+            box-sizing: border-box;
+            font-weight: bold;
+            color: #FFFFFF;
+            font-size: 15px;
             transition: background-color 0.5s ease-in-out;
         }
 
-        .sign-in-container {
-            left: 0;
-            width: 50%;
-            z-index: 2;
+        .submit-button:hover {
+            background-color: #5e46ad;
         }
 
-        .container.right-panel-active .sign-in-container {
-            transform: translateX(100%);
-        }
-
-        .sign-up-container {
-            left: 0;
-            width: 50%;
-            opacity: 0;
-            z-index: 1;
-        }
-
-        .container.right-panel-active .sign-up-container {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: show 0.6s;
-        }
-
-        @keyframes show {
-            0%, 49.99% {
-                opacity: 0;
-                z-index: 1;
-            }
-            
-            50%, 100% {
-                opacity: 1;
-                z-index: 5;
-            }
-        }
-
-        .overlay-container {
+        .existing-events-button {
             position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
-            overflow: hidden;
-            transition: transform 0.6s ease-in-out;
-            z-index: 100;
+            top: 10px;
+            left: 10px;
         }
 
-        .container.right-panel-active .overlay-container{
-            transform: translateX(-100%);
-        }
-
-        .overlay {
-            background: #9888cd;
-            background: -webkit-linear-gradient(to right, #523d98, #8942a2);
-            background: linear-gradient(to right, #523d98, #8942a2);
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 0 0;
-            color: #FFFFFF;
-            position: relative;
-            left: -100%;
-            height: 100%;
-            width: 200%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .container.right-panel-active .overlay {
-            transform: translateX(50%);
-        }
-
-        .overlay-panel {
-            position: absolute;
+        .form-row {
             display: flex;
-            align-items: center;
-            justify-content: center;
             flex-direction: column;
-            padding: 0 40px;
+            margin-bottom: 10px;
+        }
+
+        .form-row label {
+            margin-bottom: 5px;
+        }
+
+        .form-row input {
+            margin-bottom: 10px;
+        }
+
+        
+        .existing-events-button {
+            padding: 12px 24px;
+            background-color: black;
+            color: white;
+            border-radius: 7px;
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
+            animation: pulse 1.75s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+
+        @keyframes pulse {
+            to {
+                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+            }
+        }
+
+        p{
+            font-size: 58px;
+            color: #9888cd;
             text-align: center;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .overlay-left {
-            transform: translateX(-20%);
-        }
-
-        .container.right-panel-active .overlay-left {
-            transform: translateX(0);
-        }
-
-        .overlay-right {
-            right: 0;
-            transform: translateX(0);
-        }
-
-        .container.right-panel-active .overlay-right {
-            transform: translateX(20%);
-        }
-
-        .social-container {
-            margin: 20px 0;
-        }
-
-        .social-container a {
-            border: 1px solid #9888cd;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 5px;
-            height: 40px;
-            width: 40px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
         }
 
     </style>
+</head>
+<body>
+    <p>bacOS</p>
+    <a href="/events" class="existing-events-button">Existing Events</a>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <div class="form-row">
+            <label for="name">Numele evenimentului</label>
+            <input type="text" id="name" name="name" required>
+        </div>
 
-<div class="container" id="container">
-	<div class="form-container sign-up-container">
-		<form action="#">
-			<h1>Creează contul</h1>
-			<div class="social-container">
-				<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-				<a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-				<a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-			</div>
-			<span>sau foloseste email-ul</span>
-			<input type="text" placeholder="Nume" />
-			<input type="email" placeholder="Email" />
-			<input type="password" placeholder="Parolă" />
-            <button onclick="window.location.href='/events'">Creează un cont</button>
-		</form>
-	</div>
-	<div class="form-container sign-in-container">
-		<form action="#">
-			<h1>Intră în cont</h1>
-			<div class="social-container">
-				<a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-				<a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-				<a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-			</div>
-			<span>sau folosește-ți contul</span>
-			<input type="email" placeholder="Email" />
-			<input type="password" placeholder="Parolă" />
-			<a href="#">Ai uitat parola?</a>
-            <button onclick="window.location.href='/events'">Intră în cont</button>
-		</form>
-	</div>
-	<div class="overlay-container">
-		<div class="overlay">
-			<div class="overlay-panel overlay-left">
-				<h1>Bine ai revenit!</h1>
-				<p>Creează-ți un cont prin a introduce datele tale!</p>
-				<button class="ghost" id="signIn">Sign In</button>
-			</div>
-			<div class="overlay-panel overlay-right">
-				<h1>Bună!</h1>
-				<p>Introdu datele pentru a intra în cont!</p>
-				<button class="ghost" id="signUp">Sign Up</button>
-			</div>
-		</div>
-	</div>
-</div>
-<script>
-const signUpButton = document.getElementById('signUp');
-const signInButton = document.getElementById('signIn');
-const container = document.getElementById('container');
+        <div class="form-row">
+            <label for="start_date">Data pornirii</label>
+            <input type="date" id="start_date" name="start_date" required>
+        </div>
 
-signUpButton.addEventListener('click', () => {
-	container.classList.add("right-panel-active");
-});
+        <div class="form-row">
+            <label for="start_time">Ora pornirii</label>
+            <input type="time" id="start_time" name="start_time" required>
+        </div>
 
-signInButton.addEventListener('click', () => {
-	container.classList.remove("right-panel-active");
-});
-</script>
+        <div class="form-row">
+            <label for="durata">Durație</label>
+            <input type="text" id="durata" name="durata" required>
+        </div>
+
+        <div class="form-row">
+            <label for="file1">Fișier 1</label>
+            <input type="file" id="file1" name="file1" multiple>
+        </div>
+
+        <div class="form-row browse-button">
+            <label for="compiler">Compilator?</label>
+            <input type="checkbox" id="compiler" name="compiler">
+        </div>
+
+        <input class = "submit-button" type="submit" value="Trimite">
+
+    </form>      
+</body>
+</html>

@@ -21,6 +21,13 @@ def api():
 
     return jsonify(event_list), 200
 
+@app.route('/api/rezultate', methods=['POST'])
+def rezultate():
+    link = request.form.get('link')
+    id = request.form.get('id')
+    # Process the link and id as needed
+    # ...
+    return jsonify({'link': link, 'id': id}), 200
 
 @app.route('/', methods=['GET', 'POST'])
 def index():

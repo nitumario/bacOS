@@ -12,7 +12,7 @@ class Event:
         self.ip = ip
         self.serverport = 80
         self.nume = nume
-        self.username = None
+        self.username = "miaumiau"
         self.path = f"~/Desktop/{self.nume}/"
         api_json = requests.get(f"http://{self.ip}:{self.serverport}/api")
         api_json = api_json.json()
@@ -70,24 +70,30 @@ class Event:
 
         cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
         file_paths_str = " ".join([os.path.abspath(path) for path in cpp_file_paths])
+        #print("codeblocks", *file_paths_str)
         ide = subprocess.Popen(["codeblocks", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        #pdfs = ' '.join(self.subiecte_wpath)
-        #pdfs = os.path.expanduser(pdfs)
         pdfs = []
         for pdf in self.subiecte_wpath:
             pdfs.append(os.path.expanduser(pdf))
-        pdfs = ' '.join(pdfs)
-        print("evince", pdfs)
-        pdf_viewer = subprocess.Popen(["evince " + pdfs], shell = True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(float(self.durata) * 60)  
-        ide.terminate()
-        pdf_viewer.terminate()
-        process = subprocess.Popen(["python3", "stop.py"])
+        pdf_viewer = subprocess.Popen(["evince", *pdfs], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        #print("evince", pdfs)
+        #pdf_viewer = subprocess.Popen(["evince " + pdfs], shell = True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        #time.sleep(float(self.durata) * 60)  
         time.sleep(5)
-        
-        process.terminate()
+        ide.terminate()
+        self.end_event()
 
+    def end_event(self):
+        #process = subprocess.Popen(["python3", "stop.py"])
+        time.sleep(5)
+        cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
+        for file in cpp_file_paths:
+            subprocess.Popen(["bash /home/m3m0r14l/Desktop/bacOS/client/upload.sh " + file + " " + self.username], shell = True)
+            time.sleep(10)
+        
+        #process.terminate()
+        
     def start(self):
         self.make_workspace()
         self.start_ide()
