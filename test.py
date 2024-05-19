@@ -6,14 +6,14 @@ import sys
 import os
 import urllib.request
 import json
+import argparse
 
 
 db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
 
-#link_file = sys.argv[1]
-#subiect = sys.argv[2]
-#username = sys.argv[3]
+
+
 def compile_cpp(source_file):
     compile_command = f"C:\\MinGW\\bin\\g++.exe {source_file} -o {source_file[:-4]}.exe"
     subprocess.run(compile_command)
@@ -24,6 +24,7 @@ def download(link, name):
     file_name = link.split('/')[-1]
     file_path = os.path.join(folder_name, file_name)
     urllib.request.urlretrieve(link, file_path)
+    return folder_name
 
 def get_tests(subiect_name):
     query = "SELECT teste FROM subiecte WHERE nume = %s"
@@ -37,7 +38,8 @@ def get_tests(subiect_name):
 def run_tests(teste_data, folder_name):
     punctaj = 0
     for file in os.listdir(folder_name):
-        compile_cpp(os.path.join(folder_name, file))
+        if file.endswith('.cpp'):
+            compile_cpp(os.path.join(folder_name, file))
     for file in os.listdir(folder_name):
         if file.endswith('.exe'):
             for test in teste_data:
@@ -45,7 +47,7 @@ def run_tests(teste_data, folder_name):
                 test_input = test['input']
                 punctaj_test = test['punctaj']
                 test_expected_output= test['output']
-                if test_name == file[:-4]:
+                if test_name == file:
                     print(f"Running test {test_name} with input {test_input} for file {file}")
                     result = subprocess.run([os.path.join(folder_name, file)], input=test_input, text=True,capture_output=True)
                     actual_output = result.stdout.strip()
@@ -57,7 +59,36 @@ def run_tests(teste_data, folder_name):
                     else:
                         print(f"Test {test_name} failed")
     print(f"Punctaj final: {punctaj}")
+    return punctaj
 
+
+def main(links, subiect, username):
+    for link in links:
+        print(f"Downloading {link}")
+        folder_name = download(link, username)
+    teste_data = get_tests(subiect)
+    punctaj = run_tests(teste_data, folder_name)
+    query = f"INSERT INTO {subiect} (username, punctaj) VALUES (%s, %s)"
+    cursor.execute(query, (username, punctaj))
+    db.commit()
+    print(f"Rezultatul a fost inregistrat cu succes pentru subiectul {subiect} si utilizatorul {username}")
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('links')  # single argument for links
+parser.add_argument('subiect')
+parser.add_argument('username')
+
+# Parse the arguments
+args = parser.parse_args()
+
+# Split the links by space to create a list
+links = args.links.split()
+subiect = args.subiect
+username = args.username
+
+
+main(links, subiect, username)
 
 
 
@@ -72,5 +103,7 @@ def run_tests(teste_data, folder_name):
 #source_file = r'C:\Users\m3m0r\Projects\bacOS\mario\subiect1.cpp'
 #compile_cpp(source_file)
 
-compile_cpp(r'C:\Users\m3m0r\Projects\bacOS\mario\subiect1.cpp')
-print(run_tests(get_tests('acummergi'), 'mario'))
+#compile_cpp(r'C:\Users\m3m0r\Projects\bacOS\mario\subiect1.cpp')
+#compile_cpp(r'C:\Users\m3m0r\Projects\bacOS\mario\subiect2.cpp')
+
+#print(run_tests(get_tests('olimpiada_miau'), 'mario'))

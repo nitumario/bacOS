@@ -31,8 +31,7 @@ def api():
 def rezultate():
     link = request.form.get('link')
     id = request.form.get('id')
-    # Process the link and id as needed
-    # ...
+
     return jsonify({'link': link, 'id': id}), 200
 
 @app.route('/create', methods=['GET', 'POST'])
