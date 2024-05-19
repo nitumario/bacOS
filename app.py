@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_from_directory, jsonify
+from flask import Flask, request, render_template, send_from_directory, jsonify, redirect, url_for, flash, session
 from datetime import datetime
 import os
 import json
@@ -11,7 +11,7 @@ db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
 
 app = Flask(__name__)
-
+app.secret_key = 'test'
 @app.route('/api', methods=['GET'])
 def api():
     event_folders = [folder for folder in os.listdir('.') if folder.startswith('event')]
@@ -35,8 +35,12 @@ def rezultate():
     # ...
     return jsonify({'link': link, 'id': id}), 200
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/create', methods=['GET', 'POST'])
 def index():
+    if 'logged_in' not in session or not session['logged_in']:  # Check session variable
+        flash('You must be logged in to view this page', 'error')
+        return redirect(url_for('login'))
+    
     if request.method == 'POST':
         start_date = request.form.get('start_date')
         start_time = request.form.get('start_time')
@@ -146,6 +150,59 @@ def download_file(event_folder, file):
     elif time_difference*60 < 100 and time_difference >= 0:
         return send_from_directory(event_folder, file)
 
+
+@app.route('/', methods=['GET'])
+def home():
+    if 'logged_in' in session and session['logged_in']:
+        return redirect(url_for('events'))
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        query = "SELECT * FROM users WHERE email = %s AND password = %s"
+        cursor.execute(query, (email, password))
+        result = cursor.fetchone()
+        
+        if result:
+            session['logged_in'] = True  
+            return redirect(url_for('events'))
+        else:
+            flash('Invalid credentials', 'error')
+            return redirect(url_for('login'))
+    
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        query = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
+        try:
+            cursor.execute(query, (username, email, password))
+            db.commit()
+            flash('Account created successfully', 'success')
+            
+            # Auto log in after registration
+            session['logged_in'] = True
+            return redirect(url_for('events'))
+        except db.connector.Error as err:
+            flash('Error: {}'.format(err), 'error')
+            return redirect(url_for('register'))
+
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)  # Clear session variable
+    flash('You have been logged out', 'success')
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(host = '192.168.1.7', port=80, debug=True)
