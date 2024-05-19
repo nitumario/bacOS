@@ -3,6 +3,12 @@ from datetime import datetime
 import os
 import json
 from datetime import datetime
+import MySQLdb
+
+
+
+db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
+cursor = db.cursor()
 
 app = Flask(__name__)
 
@@ -54,7 +60,9 @@ def index():
 
         directory = f"event_{name}_{ziua_start}{luna_start}{ora_start}{minut_start}"
         os.makedirs(directory, exist_ok=True)
-
+        query = f"CREATE TABLE IF NOT EXISTS {name} (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), punctaj INT CHECK (punctaj >= 0 AND punctaj <= 100))"
+        cursor.execute(query)
+        db.commit()
         event_data = {
             "name": name,
             "start_date": formatted_date,
@@ -62,7 +70,7 @@ def index():
             "durata": durata,
             "compiler": compiler
         }
-
+    
         with open(f"{directory}/event_{name}_{ziua_start}{luna_start}{ora_start}{minut_start}.json", "w") as f:
             json.dump(event_data, f)
 
@@ -71,6 +79,28 @@ def index():
             if file:
                 file.save(os.path.join(directory, file.filename))
 
+        # Insert event name into subiecte table
+        teste_files = request.files.getlist('teste')
+        file_data_list = []
+
+        for file in teste_files:
+            if file:
+                file_path = os.path.join(directory, file.filename)
+                file.save(file_path)
+                with open(file_path, "r") as f:
+                    file_data = json.load(f)
+                    file_data_list.append(file_data)
+
+        # Insert event name into subiecte table
+        query = "INSERT INTO subiecte (nume, teste) VALUES (%s, %s)"
+        values = (name, json.dumps(file_data_list))
+        cursor.execute(query, values)
+        db.commit()
+
+        # Delete teste files locally
+        for file in teste_files:
+            if file:
+                os.remove(os.path.join(directory, file.filename))
     return render_template('index.html')
 
 @app.route('/events', methods=['GET'])

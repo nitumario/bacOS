@@ -1,0 +1,27 @@
+[
+    {
+        "id": "subiect1",
+        "input": "1 1",
+        "output": "2",
+        "punctaj": 25
+    },
+    {
+        "id": "subiect1",
+        "input": "1 -1",
+        "output": "0",
+        "punctaj": 25
+    },
+
+    {
+        "id": "subiect2",
+        "input": "2,147,483,600 5",
+        "output": "5",
+        "punctaj": 25
+    },
+    {
+        "id": "subiect2",
+        "input": "10 25",
+        "output": "5",
+        "punctaj": 25
+    }
+]
