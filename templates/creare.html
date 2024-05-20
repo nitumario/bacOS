@@ -130,27 +130,9 @@
             background-color: #5e46ad;
         }
 
-        .events-button {
-            position: relative;
-            bottom: 80px;
-            right: 10px;
-            margin: 0px;
-            padding: 12px 24px;
-            background-color: #443C68;
-            color: #FFFFFF;
-            border-radius: 10px;
-            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
-            animation: pulse 1.75s infinite cubic-bezier(0.66, 0, 0, 1);
-        }
 
         a {
             text-decoration: none;
-        }
-
-        @keyframes pulse {
-            to {
-                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
-            }
         }
 
         .logo {
@@ -205,13 +187,73 @@
             transform: translateX(25px);
         }
 
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(28deg, #7c6bb6 0%, #392c66 30%, #2f2454 100%);
+            padding: 10px 0;
+            z-index: 1000;
+            }
+
+            .header ul {
+            display: flex;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            float: right;
+            }
+
+            .header li {
+            position: relative;
+            }
+
+            .header a {
+            display: block;
+            padding: 10px 20px;
+            color: #FFFFFF;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            height: 100%;
+            margin-top: -9px;
+            }
+
+            .header a:hover {
+            background-color: rgb(18, 10, 44, .4);
+            height: 100%;
+            }
+
+            .header a1{
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+            color: #FFFFFF;
+            float: left;
+            margin-left: 20px;
+            }
+
     </style>
 </head>
 <body>
-    <div class="logo">bacOS</div>
+    <header class="header">
+        <a1>bacOS</a1>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li>
+            <a href="/creare">Creaza eveniment</a>
+          </li>
+          <li>
+            <a href="/events">Vizualizeaza alte evenimente</a>
+          </li>
+          <li>
+            <a href="/logout">Logout</a>
+          </li>
+        </ul>
+      </header>
 
-    <a href="/events" class="events-button">Evenimente existente</a>
-    <form action="/creare" method="post" enctype="multipart/form-data">
+        <form action="/creare" method="post" enctype="multipart/form-data">
 
         <div class="form-row" style="grid-column: span 2;">
             <label for="name">Numele evenimentului</label>

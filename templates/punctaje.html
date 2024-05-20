@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rezultate</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        th, td {
+            border: 1px solid black;
+            border-right: none; /* Remove default right border */
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            border-right: 1px solid black; /* Add right border for header cells */
+        }
+        
+        td:last-child {
+            border-right: 1px solid black; /* Add right border for last column cells */
+        }
+    </style>
+</head>
+<body>
+    <h1>Rezultate</h1>
+    <table>
+        <tr>
+            <th>Subiect</th>
+        </tr>
+        {% for subiect in subiecte %}
+        <tr>
+            <td>{{ subiect }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

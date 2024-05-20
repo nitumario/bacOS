@@ -23,7 +23,6 @@ def api():
         event['files'] = os.listdir(folder)
         event_list.append(event)
 
-    event_list.sort(key=lambda e: get_event_start_datetime(e['folder']))
 
     return jsonify(event_list), 200
 
@@ -37,14 +36,16 @@ def rezultate():
     links.append(link)
     if link == 'done':
         links.pop()
-        subprocess.run(f"python3 test.py {links} {subiect} {id}")
+        formatted_links = ' '.join(links)
+        print(f"python3 test.py \"{formatted_links}\" {subiect} {id}")
+        subprocess.run(f"python3 test.py \"{formatted_links}\" {subiect} {id}")
         links.clear()
 
     return jsonify({'links': links, 'subiect': subiect, 'id': id }), 200
 
 @app.route('/creare', methods=['GET', 'POST'])
 def creare():
-    if 'logged_in' not in session or not session['logged_in']:  # Check session variable
+    if 'logged_in' not in session or not session['logged_in']:  
         flash('You must be logged in to view this page', 'error')
         return redirect(url_for('login'))
     
@@ -90,7 +91,6 @@ def creare():
             if file:
                 file.save(os.path.join(directory, file.filename))
 
-        # Insert event name into subiecte table
         teste_files = request.files.getlist('file2')
         file_data_list = []
 
@@ -102,13 +102,11 @@ def creare():
                     file_data = json.load(f)
                     file_data_list.append(file_data)
 
-        # Insert event name into subiecte table
         query = "INSERT INTO subiecte (nume, teste) VALUES (%s, %s)"
         values = (name, json.dumps(file_data_list))
         cursor.execute(query, values)
         db.commit()
 
-        # Delete teste files locally
         for file in teste_files:
             if file:
                 os.remove(os.path.join(directory, file.filename))
@@ -116,14 +114,29 @@ def creare():
 
 @app.route('/events', methods=['GET'])
 def events():
-    event_folders = [folder for folder in os.listdir('.') if folder.startswith('event')]
-    event_folders.sort(key=lambda folder: get_event_start_datetime(folder))
-    return render_template('events.html', event_folders=event_folders)
+    if 'logged_in' not in session or not session['logged_in']:  
+        flash('You must be logged in to view this page', 'error')
+        return redirect(url_for('login'))
 
-def get_event_start_datetime(folder):
-    folder_datetime = folder[-8:]
-    start_datetime = datetime.strptime(folder_datetime, '%d%m%H%M')
-    return start_datetime
+    event_folders = [folder for folder in os.listdir('.') if folder.startswith('event')]
+    files_by_folder = {}
+    print(session.get('username'))
+    punctaj = None
+    for folder in event_folders:
+        folder_name = folder.split("_")[1]
+        files = [file for file in os.listdir(folder) if not file.endswith('.json')]
+        user = session.get('username')
+        query = f"SELECT punctaj FROM {folder_name} WHERE username = %s"
+        cursor.execute(query, (user,))
+        result = cursor.fetchone()
+
+        punctaj = "Nu ai participat la aceasta competitie" if not result else result[0]
+        files_by_folder[folder_name] = files
+        print(punctaj)
+
+    return render_template('events.html', files_by_folder=files_by_folder,punctaj=punctaj)
+
+
 
 @app.route('/events/<event_folder>', methods=['GET'])
 def see_contents(event_folder):
@@ -139,29 +152,28 @@ def see_contents(event_folder):
 def download_file(event_folder, file):
     
     folder_datetime = event_folder[-8:]
-
     current_datetime = datetime.now()
     current_datetime = current_datetime.strftime('%d%m%H%M')
     current_datetime = datetime.strptime(current_datetime, '%d%m%H%M')
 
     folder_datetime = datetime.strptime(folder_datetime, '%d%m%H%M')
 
-    time_difference = (current_datetime - folder_datetime).total_seconds() / 3600
-    print(time_difference*60)
+    time_difference = (current_datetime - folder_datetime).total_seconds() / 60
 
-    if time_difference*60 < 0:
-        # return send_from_directory(event_folder, file)
-        return (f"Acest eveniment incepe in {int(time_difference)} ore si {int((time_difference* 60)%60)} minute", 423)
-    elif time_difference*60 > 100000:
+    if time_difference < 0:
+        hours = int(-time_difference) // 60
+        minutes = int(-time_difference) % 60
+        return (f"Acest eveniment incepe in {hours} ore si {minutes} minute", 423)
+    elif time_difference > 100000:
         return 'Acest eveniment s-a terminat', 423
-    elif time_difference*60 < 100 and time_difference >= 0:
+    else:
         return send_from_directory(event_folder, file)
 
 
 @app.route('/', methods=['GET'])
 def home():
     if 'logged_in' in session and session['logged_in']:
-        return redirect(url_for('events'))
+        return render_template('index.html')
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -175,7 +187,9 @@ def login():
         result = cursor.fetchone()
         
         if result:
-            session['logged_in'] = True  
+            session['logged_in'] = True
+            session['email'] = email
+            session['username'] = result[1]
             return redirect(url_for('events'))
         else:
             flash('Invalid credentials', 'error')
@@ -196,7 +210,7 @@ def register():
             db.commit()
             flash('Account created successfully', 'success')
             
-            # Auto log in after registration
+ 
             session['logged_in'] = True
             return redirect(url_for('events'))
         except db.connector.Error as err:
@@ -205,11 +219,18 @@ def register():
 
     return render_template('login.html')
 
+@app.route('/punctaje', methods=['GET'])
+def punctaje():
+    query = "SELECT * FROM users"
+    cursor.execute(query)
+    subiecte = cursor.fetchall()
+    return render_template('punctaje.html', subiecte=subiecte)
+
 @app.route('/logout')
 def logout():
-    session.pop('logged_in', None)  # Clear session variable
+    session.pop('logged_in', None)  
     flash('You have been logged out', 'success')
     return redirect(url_for('login'))
-
+ 
 if __name__ == '__main__':
     app.run(host = '192.168.1.7', port=80, debug=True)

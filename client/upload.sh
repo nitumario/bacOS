@@ -9,27 +9,20 @@ FILE=$1
 ID=$2
 SUBIECT=$3
 if [ "$FILE" == "done" ]; then
-    # Post the file and ID to a web server
     curl -X POST -d "link=$FILE&id=$ID&subiect=$SUBIECT" http://192.168.1.7/api/rezultate
     exit 0
 fi
-# Perform the upload and capture the response
 RESPONSE=$(curl -s -T "$FILE" https://bashupload.com)
 
-# Debug: Print the entire response for inspection
 echo "Response from bashupload.com:"
 echo "$RESPONSE"
 
-# Check if the upload was successful and extract the link
 if echo "$RESPONSE" | grep -q "Uploaded"; then
-    # Extract the link using a more precise regex pattern
     LINK=$(echo "$RESPONSE" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
 
-    # Ensure that a link was found
     if [ -n "$LINK" ]; then
-        echo "Link: $LINK"  # Print the link
+        echo "Link: $LINK"  
 
-        # Post the link and ID to a web server
         curl -X POST -d "link=$LINK&id=$ID&subiect=$SUBIECT" http://192.168.1.7/api/rezultate
     else
         echo "Nu am putut extrage link-ul!"

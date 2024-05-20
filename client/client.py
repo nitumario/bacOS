@@ -12,7 +12,7 @@ class Event:
         self.ip = ip
         self.serverport = 80
         self.nume = nume
-        self.username = "miaumiau"
+        self.username = os.getlogin()
         self.path = f"~/Desktop/{self.nume}/"
         api_json = requests.get(f"http://{self.ip}:{self.serverport}/api")
         api_json = api_json.json()
@@ -27,7 +27,7 @@ class Event:
 
         for subiecte in api_json:
             if subiecte['folder'] == self.nume:
-                for fisier in subiecte['files']:
+                for fisier in subiecte['files']: 
                     if fisier.endswith(".pdf"):
                         self.subiecte_wpath.append(f"{self.path}{fisier[:-4]}/{fisier}")
 
@@ -61,8 +61,6 @@ class Event:
             subprocess.run(["wget", "-P", subiect_folder, file_url]) 
 
     def start_ide(self):
-        self.durata = None
-        self.compiler = None
         response = requests.get(f"http://{self.ip}:{self.serverport}/events/{self.nume}/{self.nume}.json")
         event_data = response.json()
         self.durata = event_data['durata']
@@ -71,30 +69,33 @@ class Event:
         cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
         file_paths_str = " ".join([os.path.abspath(path) for path in cpp_file_paths])
         #print("codeblocks", *file_paths_str)
-        ide = subprocess.Popen(["codeblocks", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
+        if self.compiler:
+            ide = subprocess.Popen(["codeblocks", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        else:
+            ide = subprocess.Popen(["subl", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         pdfs = []
         for pdf in self.subiecte_wpath:
             pdfs.append(os.path.expanduser(pdf))
         pdf_viewer = subprocess.Popen(["evince", *pdfs], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         #print("evince", pdfs)
         #pdf_viewer = subprocess.Popen(["evince " + pdfs], shell = True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        #time.sleep(float(self.durata) * 60)  
-        time.sleep(5)
+        time.sleep(int(self.durata)*60)  
+        #time.sleep(15)
         ide.terminate()
         self.end_event()
 
     def end_event(self):
         time.sleep(5)
+        if self.compiler == 0:
+            return 0
+        process = subprocess.Popen(["python3", "waiting.py"])
         cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
         print(cpp_file_paths)
         for file in cpp_file_paths:
             print(f"Uploading {file}")
-            # Use a single string for the command with shell=True
             command = f"bash /home/m3m0r14l/Desktop/bacOS/client/upload.sh {file} {self.username} {self.nume}"
             subprocess.Popen(command, shell=True)
-            time.sleep(10)
-        # Run the final command
+            time.sleep(1)
         final_command = f"bash /home/m3m0r14l/Desktop/bacOS/client/upload.sh done {self.username} {self.nume}"
         subprocess.Popen(final_command, shell=True)
         #process.terminate()

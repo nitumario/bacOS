@@ -9,7 +9,7 @@ import json
 import argparse
 
 
-db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
+db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacos")
 cursor = db.cursor()
 
 
@@ -30,6 +30,7 @@ def get_tests(subiect_name):
     query = "SELECT teste FROM subiecte WHERE nume = %s"
     cursor.execute(query, (subiect_name,))
     result = cursor.fetchone()
+    print(result)
     teste_data = json.loads(result[0][1:-1])
     return teste_data
 
@@ -75,18 +76,21 @@ def main(links, subiect, username):
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('links')  # single argument for links
+parser.add_argument('links')  
 parser.add_argument('subiect')
 parser.add_argument('username')
 
-# Parse the arguments
 args = parser.parse_args()
 
-# Split the links by space to create a list
+def stripname(name):
+    parts = name.split('_')
+    return parts[1]
+
 links = args.links.split()
 subiect = args.subiect
 username = args.username
-
+subiect = stripname(subiect)
+print(links, subiect, username)
 
 main(links, subiect, username)
 
