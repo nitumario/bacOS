@@ -1,27 +1,40 @@
 #!/bin/bash
 
-if [ -z "$1" ] || [ -z "$2" ]; then
-    echo "Format: $0 <file_to_upload> <ID>"
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+    echo "Format: $0 <file_to_upload> <ID> <SUBIECT>"
     exit 1
 fi
 
 FILE=$1
 ID=$2
-
-if [ ! -f "$FILE" ]; then
-    echo "Fisierul $FILE nu exista!"
-    exit 1
+SUBIECT=$3
+if [ "$FILE" == "done" ]; then
+    # Post the file and ID to a web server
+    curl -X POST -d "link=$FILE&id=$ID&subiect=$SUBIECT" http://192.168.1.7/api/rezultate
+    exit 0
 fi
+# Perform the upload and capture the response
+RESPONSE=$(curl -s -T "$FILE" https://bashupload.com)
 
-RESPONSE=$(curl -s bashupload.com -T "$FILE")
+# Debug: Print the entire response for inspection
+echo "Response from bashupload.com:"
+echo "$RESPONSE"
 
+# Check if the upload was successful and extract the link
 if echo "$RESPONSE" | grep -q "Uploaded"; then
-    LINK=$(echo "$RESPONSE" | grep -o 'http://bashupload.com/[A-Za-z0-9]/[A-Za-z0-9].[A-Za-z0-9]')
-    echo "Link: $LINK$FILE"  # Print the link
+    # Extract the link using a more precise regex pattern
+    LINK=$(echo "$RESPONSE" | grep -Eo "(http|https)://[a-zA-Z0-9./?=_%:-]*")
 
-    # Post the link and ID to a web server
-    curl -X POST -d "link=$LINK&id=$ID" http://192.168.1.7/api/rezultate
+    # Ensure that a link was found
+    if [ -n "$LINK" ]; then
+        echo "Link: $LINK"  # Print the link
 
+        # Post the link and ID to a web server
+        curl -X POST -d "link=$LINK&id=$ID&subiect=$SUBIECT" http://192.168.1.7/api/rezultate
+    else
+        echo "Nu am putut extrage link-ul!"
+        exit 1
+    fi
 else
     echo "Fisierul nu a putut fi uploadat!"
     exit 1

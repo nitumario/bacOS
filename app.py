@@ -4,7 +4,7 @@ import os
 import json
 from datetime import datetime
 import MySQLdb
-
+import subprocess
 
 
 db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
@@ -27,15 +27,23 @@ def api():
 
     return jsonify(event_list), 200
 
+links = []
+
 @app.route('/api/rezultate', methods=['POST'])
 def rezultate():
     link = request.form.get('link')
     id = request.form.get('id')
+    subiect = request.form.get('subiect')
+    links.append(link)
+    if link == 'done':
+        links.pop()
+        subprocess.run(f"python3 test.py {links} {subiect} {id}")
+        links.clear()
 
-    return jsonify({'link': link, 'id': id}), 200
+    return jsonify({'links': links, 'subiect': subiect, 'id': id }), 200
 
-@app.route('/create', methods=['GET', 'POST'])
-def index():
+@app.route('/creare', methods=['GET', 'POST'])
+def creare():
     if 'logged_in' not in session or not session['logged_in']:  # Check session variable
         flash('You must be logged in to view this page', 'error')
         return redirect(url_for('login'))
@@ -83,7 +91,7 @@ def index():
                 file.save(os.path.join(directory, file.filename))
 
         # Insert event name into subiecte table
-        teste_files = request.files.getlist('teste')
+        teste_files = request.files.getlist('file2')
         file_data_list = []
 
         for file in teste_files:
@@ -104,7 +112,7 @@ def index():
         for file in teste_files:
             if file:
                 os.remove(os.path.join(directory, file.filename))
-    return render_template('index.html')
+    return render_template('creare.html')
 
 @app.route('/events', methods=['GET'])
 def events():

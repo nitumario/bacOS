@@ -85,13 +85,18 @@ class Event:
         self.end_event()
 
     def end_event(self):
-        #process = subprocess.Popen(["python3", "stop.py"])
         time.sleep(5)
         cpp_file_paths = [os.path.splitext(path)[0] + ".cpp" for path in self.subiecte_wpath]
+        print(cpp_file_paths)
         for file in cpp_file_paths:
-            subprocess.Popen(["bash /home/m3m0r14l/Desktop/bacOS/client/upload.sh " + file + " " + self.username], shell = True)
+            print(f"Uploading {file}")
+            # Use a single string for the command with shell=True
+            command = f"bash /home/m3m0r14l/Desktop/bacOS/client/upload.sh {file} {self.username} {self.nume}"
+            subprocess.Popen(command, shell=True)
             time.sleep(10)
-        
+        # Run the final command
+        final_command = f"bash /home/m3m0r14l/Desktop/bacOS/client/upload.sh done {self.username} {self.nume}"
+        subprocess.Popen(final_command, shell=True)
         #process.terminate()
         
     def start(self):

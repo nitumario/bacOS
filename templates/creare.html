@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Creează eveniment</title>
+    <title>bacOS admin</title>
+    <link rel="icon" type="image/png" href="https://bashupload.com/0mZgD/bacOS.png">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -20,7 +21,6 @@
             background-color: #443C68;
             padding: 20px;
             border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-gap: 10px;
@@ -35,8 +35,7 @@
         }
 
         input[type="date"],
-        input[type="time"],
-        input[type="text"]{
+        input[type="time"]{
             margin-bottom: 10px;
             width: 100%;
             padding: 10px;
@@ -44,38 +43,45 @@
             box-sizing: border-box;
             font-weight: bold;
             text-align: center;
-
+        }
+        input[type="name"] {
+            margin-bottom: 10px;
+            grid-column: span 2;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: bold;
+            text-align: center;
         }
 
-        input[type="file"]{
+        input[type="duration"] {
             margin-bottom: 10px;
             width: 100%;
             padding: 10px;
             border-radius: 10px;
             box-sizing: border-box;
             font-weight: bold;
-
+            text-align: center;
         }
 
-        input[type="checkbox"]{
+        input[type="file"] {
             margin-bottom: 10px;
             width: 100%;
             padding: 10px;
             border-radius: 10px;
             box-sizing: border-box;
-            accent-color: #ffffff;
-            color: #FFFFFF;
-
+            font-weight: bold;
+            color: #ffffff;
         }
 
         .submit-button {
             background-color: #9888cd;
-            color: white;
             cursor: pointer;
             margin-bottom: 10px;
             width: 200%;
             padding: 10px;
-            border-radius:10px;
+            border-radius: 10px;
             box-sizing: border-box;
             font-weight: bold;
             color: #FFFFFF;
@@ -87,16 +93,12 @@
             background-color: #5e46ad;
         }
 
-        .existing-events-button {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
         .form-row {
             display: flex;
             flex-direction: column;
-            margin-bottom: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         .form-row label {
@@ -107,14 +109,34 @@
             margin-bottom: 10px;
         }
 
-        
-        .existing-events-button {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            margin: 10px;
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            background-color: #9888cd;
+            color: #ffffff;
+            cursor: pointer;
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.5s ease-in-out;
+        }
+
+        .file-label:hover {
+            background-color: #5e46ad;
+        }
+
+        .events-button {
+            position: relative;
+            bottom: 80px;
+            right: 10px;
+            margin: 0px;
             padding: 12px 24px;
-            background-color: #27126d;
+            background-color: #443C68;
             color: #FFFFFF;
             border-radius: 10px;
             box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.1);
@@ -127,8 +149,17 @@
 
         @keyframes pulse {
             to {
-                box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+                box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
             }
+        }
+
+        .logo {
+            font-size: 58px;
+            color: #9888cd;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
         }
 
         p{
@@ -140,15 +171,51 @@
             font-weight: bold;
         }
 
+        .toggle {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 50px;
+            height: 25px;
+            background-color: #736879;
+            outline: none;
+            cursor: pointer;
+            border-radius: 50px;
+            position: relative;
+            transition: background-color 0.3s;
+        }
+
+        .toggle:before {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+
+        .toggle:checked {
+            background-color: #9f86f1;
+        }
+
+        .toggle:checked:before {
+            transform: translateX(25px);
+        }
+
     </style>
 </head>
 <body>
-    <p>bacOS</p>
-    <a href="/events" class="existing-events-button">Existing Events</a>
+    <div class="logo">bacOS</div>
+
+    <a href="/events" class="events-button">Evenimente existente</a>
     <form action="/creare" method="post" enctype="multipart/form-data">
-        <div class="form-row">
+
+        <div class="form-row" style="grid-column: span 2;">
             <label for="name">Numele evenimentului</label>
-            <input type="text" id="name" name="name" required>
+            <input type="name" id="name" name="name" placeholder="ex. Olimpiada de..." required>
         </div>
 
         <div class="form-row">
@@ -162,28 +229,23 @@
         </div>
 
         <div class="form-row">
-            <label for="durata">Durație</label>
-            <input type="text" id="durata" name="durata" required>
+            <label for="durata">Durată(minute)</label>
+            <input type="duration" id="durata" name="durata" placeholder="ex. 120" required>
         </div>
 
         <div class="form-row">
-            <label for="file1">Fișier 1</label>
-            <input type="file" id="file1" name="file1" multiple>
-        </div>
-
-        <div class="form-row">
-            <label for="file2">Fișier 2</label>
-            <input type="file" id="file2" name="file2" multiple>
-        </div>
-
-        <div class="form-row">
-            <label for="file3">Fișier 3</label>
-            <input type="file" id="file3" name="file3" multiple>
-        </div>
-
-        <div class="form-row browse-button">
             <label for="compiler">Compilator?</label>
-            <input type="checkbox" id="compiler" name="compiler">
+            <input class="toggle" type="checkbox" id="compiler" name="compiler">
+        </div>
+
+        <div class="form-row">
+            <label for="file1" class="file-label">Introdu subiecte</label>
+            <input type="file" id="file1" name="file1" class="file-input" required multiple>
+        </div>
+
+        <div class="form-row">
+            <label for="file2" class="file-label">Introdu teste de compilare</label>
+            <input type="file" id="file2" name="file2" class="file-input" multiple>
         </div>
 
         <input class="submit-button" type="submit" value="Trimite">

@@ -93,8 +93,6 @@ main(links, subiect, username)
 
 
 
-
-
 #run_tests(get_tests('acummergi'), 'mario') 
 #print(get_tests('acummergi'))   
 
