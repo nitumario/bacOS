@@ -10,3 +10,7 @@ json: https://docs.python.org/3/library/json.html
 MySQLdb: https://mysqlclient.readthedocs.io/en/latest/
 tkinter: https://docs.python.org/3/library/tkinter.html
 unittest: https://docs.python.org/3/library/unittest.html
+
+Impartirea sarcinilor:
+Nitu Mario - Back-end
+Vlad Grigorescu - Front-end
