@@ -23,6 +23,7 @@
             margin: 10px;
             width: 250px;
             transition: transform 0.2s;
+            cursor: pointer; /* Add this line to change cursor to pointer */
         }
         .event-card:hover {
             transform: scale(1.05);
@@ -43,12 +44,14 @@
     <h1>Events</h1>
     <div class="container">
         {% for event, id in events_with_ids %}
-            <div class="event-card">
-                <div class="event-title">{{ event }}</div>
-                <div class="event-content">
-                    ID: {{ id }}
+            <a href="/event/{{ id }}"> <!-- Wrap the event card with an anchor tag -->
+                <div class="event-card">
+                    <div class="event-title">{{ event }}</div>
+                    <div class="event-content">
+                        ID: {{ id }}
+                    </div>
                 </div>
-            </div>
+            </a>
         {% endfor %}
     </div>
 </body>

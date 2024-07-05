@@ -78,10 +78,23 @@ def gentest():
 def events():
     cursor.execute("SELECT id, nume FROM events")
     events = cursor.fetchall()
-    events_with_ids = [(event[1], event[0]) for event in events]  # Create a list of tuples (name, id)
+    events_with_ids = [(event[1], event[0]) for event in events]
 
     return render_template('events.html', events_with_ids=events_with_ids)
 
+@app.route('/event/<id>', methods=['GET'])
+def event(id):
+    cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
+    event = cursor.fetchone()
+    event_data = {
+        'id': event[0],
+        'nume': event[1],
+        'startdatetime': event[2],
+        'durata': event[3],
+        'compiler': event[4],
+        'subiecte': os.listdir(f"events\\{id}")
+    }
 
+    return render_template('event.html', event_data=event_data)
 if __name__ == '__main__':
     app.run(host = ip, port=80, debug=True)
