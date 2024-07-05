@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Event</title>
+</head>
+<body>
+    <form action="/creare" method="post" enctype="multipart/form-data">
+        <label for="nume">Name:</label>
+        <input type="text" id="nume" name="nume" required><br><br>
+
+        <label for="startdatetime">Start Date and Time:</label>
+        <input type="datetime-local" id="startdatetime" name="startdatetime" required><br><br>
+
+        <label for="durata">Duration (in hours):</label>
+        <input type="number" id="durata" name="durata" required><br><br>
+
+        <label for="compiler">Need Compiler:</label>
+        <input type="checkbox" id="compiler" name="compiler"><br><br>
+
+        <label for="subiecte">Upload Files:</label>
+        <input type="file" id="subiecte" name="subiecte" multiple><br><br>
+
+        <label for="teste">Upload Test Files:</label>
+        <input type="file" id="teste" name="teste" multiple><br><br>
+
+        <input type="submit" value="Create Event">
+    </form>
+</body>
+</html>
