@@ -121,7 +121,7 @@ def events():
     event_folders = [folder for folder in os.listdir('.') if folder.startswith('event')]
     files_by_folder = {}
     print(session.get('username'))
-    punctaj = None
+    punctaj = "Nu ai participat la acest eveniment"
     for folder in event_folders:
         folder_name = folder.split("_")[1]
         files = [file for file in os.listdir(folder) if not file.endswith('.json')]
@@ -129,8 +129,11 @@ def events():
         query = f"SELECT punctaj FROM {folder_name} WHERE username = %s"
         cursor.execute(query, (user,))
         result = cursor.fetchone()
-
-        punctaj = "Nu ai participat la aceasta competitie" if not result else result[0]
+        print(result)
+        if result is not None:
+            punctaj = result[0]
+        else:
+            punctaj = "Nu ai participat la acest eveniment"
         files_by_folder[folder_name] = files
         print(punctaj)
 
@@ -212,6 +215,8 @@ def register():
             
  
             session['logged_in'] = True
+            session['email'] = email
+            session['username'] = username
             return redirect(url_for('events'))
         except db.connector.Error as err:
             flash('Error: {}'.format(err), 'error')
@@ -233,4 +238,4 @@ def logout():
     return redirect(url_for('login'))
  
 if __name__ == '__main__':
-    app.run(host = '192.168.1.7', port=80, debug=True)
+    app.run(host = '192.168.220.64', port=80, debug=True)
