@@ -8,71 +8,152 @@ db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
 ip = '192.168.56.1'
 
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)  
+    flash('You have been logged out', 'success')
+    return redirect(url_for('login'))   
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        type = request.form.get('type')
+        if type == 'on':
+            type = 'asteapta aprobare'
+        else:
+            type = 'elev'
+
+        query = "INSERT INTO users (username, email, password, account_type) VALUES (%s, %s, %s, %s)"
+        cursor.execute(query, (username, email, password, type))
+        db.commit()
+        flash('Account created successfully', 'success')
+        
+
+        session['logged_in'] = True
+        session['email'] = email
+        session['username'] = username
+        return redirect(url_for('events'))
+
+
+    return render_template('login.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        query = "SELECT * FROM users WHERE email = %s AND password = %s"
+        cursor.execute(query, (email, password))
+        result = cursor.fetchone()
+        
+        if result:
+            session['logged_in'] = True
+            session['email'] = email
+            session['username'] = result[1]
+            return redirect(url_for('events'))
+        else:
+            flash('Invalid credentials', 'error')
+            return redirect(url_for('login'))
+    return render_template('login.html')
+    
+
+
+
 
 @app.route('/creare', methods=['GET', 'POST'])
 def creare():
-    if request.method == 'POST':
-        nume = request.form.get('nume')
-        startdatetime = request.form.get('startdatetime')
-        durata = request.form.get('durata')
-        compiler = request.form.get('compiler')
+    if 'logged_in' in session and session['logged_in']:
 
-        if compiler == 'on':
-            compiler = True
-        else:
-            compiler = False
+        if request.method == 'POST':
+            nume = request.form.get('nume')
+            startdatetime = request.form.get('startdatetime')
+            durata = request.form.get('durata')
+            compiler = request.form.get('compiler')
 
-        cursor.execute(f"INSERT INTO events (nume, startdatetime, durata, compiler) VALUES ('{nume}', '{startdatetime}', {durata}, {compiler})")
-        db.commit()
+            if compiler == 'on':
+                compiler = True
+            else:
+                compiler = False
 
-        id = str(cursor.lastrowid)
-        os.makedirs("events\\" + id)
+            cursor.execute(f"INSERT INTO events (nume, startdatetime, durata, compiler) VALUES ('{nume}', '{startdatetime}', {durata}, {compiler})")
+            db.commit()
 
-        subiecte = request.files.getlist('subiecte')
-        for file in subiecte:
-            if file:
-                file.save(os.path.join(id, file.filename))
+            id = str(cursor.lastrowid)
+            os.makedirs("events\\" + id)
 
-        test = request.files.get('teste')
-        if test:
-            test.save(os.path.join(id, test.filename))
-    return render_template('creare.html')
+            subiecte = request.files.getlist('subiecte')
+            for file in subiecte:
+                if file:
+                    file.save(os.path.join("events\\" + id, file.filename))
+
+            test = request.files.get('teste')
+            if test:
+                test.save(os.path.join(id, test.filename))
+        return render_template('creare.html')
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/api/event/<int:id>', methods=['GET'])
+def api_event(id):
+    cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
+    event = cursor.fetchone()
+    if event:
+        event_data = {
+            'id': event[0],
+            'nume': event[1],
+            'startdatetime': event[3],
+            'durata': event[4],
+            'compiler': event[5],
+            'subiecte': os.listdir(f"events\\{id}")
+        }
+        return jsonify(event_data)
+    else:
+        return jsonify({'error': 'Event not found'}), 404
+    
 
 @app.route('/gentest', methods=['GET', 'POST'])
 def gentest():
-    if request.method == 'POST':
-        subiect = request.form.get('subiect')
-        input = request.form.get('input')
-        id = request.form.get('id_test')
-        expected_output = request.form.get('expected_output')
-        punctaj = request.form.get('punctaj')
+    if 'logged_in' in session and session['logged_in']:
+        if request.method == 'POST':
+            subiect = request.form.get('subiect')
+            input = request.form.get('input')
+            id = request.form.get('id_test')
+            expected_output = request.form.get('expected_output')
+            punctaj = request.form.get('punctaj')
 
-        cursor.execute("SELECT teste FROM events WHERE id = %s", (id,))
-        existing_json = cursor.fetchone()[0]
+            cursor.execute("SELECT teste FROM events WHERE id = %s", (id,))
+            existing_json = cursor.fetchone()[0]
 
-        try:
-            existing_data = json.loads(existing_json)
-            if not isinstance(existing_data, list):
+            try:
+                existing_data = json.loads(existing_json)
+                if not isinstance(existing_data, list):
+                    existing_data = []
+            except (json.JSONDecodeError, TypeError):
                 existing_data = []
-        except (json.JSONDecodeError, TypeError):
-            existing_data = []
 
-        test_data = {
-            'id': subiect,
-            'input': input,
-            'expected_output': expected_output,
-            'punctaj': punctaj
-        }
+            test_data = {
+                'id': subiect,
+                'input': input,
+                'expected_output': expected_output,
+                'punctaj': punctaj
+            }
 
-        existing_data.append(test_data)
+            existing_data.append(test_data)
 
-        updated_json = json.dumps(existing_data)
+            updated_json = json.dumps(existing_data)
 
-        cursor.execute("UPDATE events SET teste = %s WHERE id = %s", (updated_json, id))
-        db.commit()
+            cursor.execute("UPDATE events SET teste = %s WHERE id = %s", (updated_json, id))
+            db.commit()
 
-    return render_template('gentest.html')
-
+        return render_template('gentest.html')
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/events', methods=['GET'])
 def events():
@@ -96,5 +177,36 @@ def event(id):
     }
 
     return render_template('event.html', event_data=event_data)
+
+
+
+
+
+
+@app.route('/event/<int:id>/edit', methods=['POST'])
+def edit_event(id):
+    if 'logged_in' in session and session['logged_in']:
+        nume = request.form.get('nume')
+        startdatetime = request.form.get('startdatetime').replace('T', ' ')
+        durata = request.form.get('durata')
+        compiler = request.form.get('compiler')
+        compiler = True if compiler == 'on' else False
+
+        query = """
+            UPDATE events 
+            SET nume = %s, startdatetime = %s, durata = %s, compiler = %s 
+            WHERE id = %s
+        """
+        cursor.execute(query, (nume, startdatetime, durata, compiler, id))
+        db.commit()
+
+        flash('Event updated successfully', 'success')
+        return redirect(url_for('event', id=id))
+    else:
+        return redirect(url_for('login'))
+
+
+
 if __name__ == '__main__':
     app.run(host = ip, port=80, debug=True)
+
