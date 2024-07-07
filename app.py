@@ -137,19 +137,21 @@ def api_event(id):
         return jsonify({'error': 'Event not found'}), 404
     
 
-@app.route('/gentest', methods=['GET', 'POST'])
-def gentest():
+
+
+
+@app.route('/gentest/<int:id>', methods=['GET', 'POST'])
+def gentest(id):
     if 'logged_in' in session and session['logged_in']:
         if request.method == 'POST':
+
             subiect = request.form.get('subiect')
             input = request.form.get('input')
-            id = request.form.get('id_test')
             expected_output = request.form.get('expected_output')
             punctaj = request.form.get('punctaj')
-
             cursor.execute("SELECT teste FROM events WHERE id = %s", (id,))
             existing_json = cursor.fetchone()[0]
-
+            print(id)
             try:
                 existing_data = json.loads(existing_json)
                 if not isinstance(existing_data, list):
@@ -170,12 +172,11 @@ def gentest():
 
             cursor.execute("UPDATE events SET teste = %s WHERE id = %s", (updated_json, id))
             db.commit()
-        
+            return redirect(url_for('event', id=id))
+
         if request.method == 'GET':
-            cursor.execute("SELECT id, nume FROM events")
-            events = cursor.fetchall()
-            events_with_ids = [{'id': event[0], 'name': event[1]} for event in events]
-            return render_template('gentest.html', events_with_ids=events_with_ids)
+
+            return render_template('gentest.html', id = id)
     else:
         return redirect(url_for('login'))
 
