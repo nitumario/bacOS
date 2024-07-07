@@ -14,7 +14,7 @@
         </p>
         <p>
             <label for="startdatetime">Start Date and Time:</label>
-            <input type="datetime-local" id="startdatetime" name="startdatetime" value="{{ event_data.startdatetime|replace(' ', 'T') }}">
+            <input type="datetime-local" id="startdatetime" name="startdatetime" value="{{ event_data.startdatetime|datetimeformat }}">
         </p>
         <p>
             <label for="durata">Duration:</label>

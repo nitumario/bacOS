@@ -2,11 +2,28 @@ from flask import Flask, request, render_template, send_from_directory, jsonify,
 import MySQLdb
 import os
 import json
+from datetime import datetime
+import uuid
+
+
+
 app = Flask(__name__)
 app.secret_key = 'test'
 db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
 ip = '192.168.56.1'
+
+def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
+    if isinstance(value, str):
+        dt = datetime.strptime(value, '%Y-%m-%d %H:%M:%S')
+        return dt.strftime(format)
+    return value
+
+app.jinja_env.filters['datetimeformat'] = datetimeformat
+
+
+
+
 
 @app.route('/logout')
 def logout():
@@ -26,16 +43,18 @@ def register():
             type = 'asteapta aprobare'
         else:
             type = 'elev'
-
-        query = "INSERT INTO users (username, email, password, account_type) VALUES (%s, %s, %s, %s)"
-        cursor.execute(query, (username, email, password, type))
+        user_uuid = uuid.uuid4()
+        query = "INSERT INTO users (username, email, password, account_type, UUID) VALUES (%s, %s, %s, %s, %s)"
+        cursor.execute(query, (username, email, password, type, user_uuid))
         db.commit()
         flash('Account created successfully', 'success')
         
 
         session['logged_in'] = True
-        session['email'] = email
-        session['username'] = username
+        session['uuid'] = user_uuid
+        session['type'] = type
+        print("user: ", session['uuid'], "with type: ", session['type'])
+
         return redirect(url_for('events'))
 
 
@@ -53,8 +72,9 @@ def login():
         
         if result:
             session['logged_in'] = True
-            session['email'] = email
-            session['username'] = result[1]
+            session['uuid'] = result[5]
+            session['type'] = result[3]
+            print("user: ", session['uuid'], "with type: ", session['type'])
             return redirect(url_for('events'))
         else:
             flash('Invalid credentials', 'error')
@@ -150,8 +170,12 @@ def gentest():
 
             cursor.execute("UPDATE events SET teste = %s WHERE id = %s", (updated_json, id))
             db.commit()
-
-        return render_template('gentest.html')
+        
+        if request.method == 'GET':
+            cursor.execute("SELECT id, nume FROM events")
+            events = cursor.fetchall()
+            events_with_ids = [{'id': event[0], 'name': event[1]} for event in events]
+            return render_template('gentest.html', events_with_ids=events_with_ids)
     else:
         return redirect(url_for('login'))
 
@@ -163,20 +187,24 @@ def events():
 
     return render_template('events.html', events_with_ids=events_with_ids)
 
-@app.route('/event/<id>', methods=['GET'])
+@app.route('/event/<id>', methods=['GET', 'POST'])
 def event(id):
+
     cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
     event = cursor.fetchone()
     event_data = {
         'id': event[0],
         'nume': event[1],
-        'startdatetime': event[2],
-        'durata': event[3],
-        'compiler': event[4],
+        'startdatetime': event[3],
+        'durata': event[4],
+        'compiler': event[5],
         'subiecte': os.listdir(f"events\\{id}")
     }
-
-    return render_template('event.html', event_data=event_data)
+    if 'logged_in' in session and session['logged_in'] and session['type'] == 'profesor':
+        return render_template('event.html', event_data=event_data)
+    else:
+        print("meow")
+        return render_template('event_uneditable.html', event_data=event_data, readonly=True)
 
 
 
@@ -204,7 +232,6 @@ def edit_event(id):
         return redirect(url_for('event', id=id))
     else:
         return redirect(url_for('login'))
-
 
 
 if __name__ == '__main__':

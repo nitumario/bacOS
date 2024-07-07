@@ -18,8 +18,13 @@
         <label for="punctaj">Score:</label>
         <input type="number" id="punctaj" name="punctaj" required><br><br>
 
-        <label for="id_test">Test ID:</label>
-        <input type="number" id="id_test" name="id_test" required><br><br>
+        <label for="event">Event:</label>
+        <select id="event" name="event" required>
+            <!-- Loop through events_with_ids and generate options -->
+            {% for event in events_with_ids %}
+                <option value="{{ event.id }}">{{ event.name }}</option>
+            {% endfor %}
+        </select><br><br>
 
         <input type="submit" value="Submit">
     </form>
