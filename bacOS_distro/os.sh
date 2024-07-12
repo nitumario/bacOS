@@ -31,3 +31,5 @@ make olddefconfig
 
 #building the kernel
 make -j$(nproc) 2>&1 | tee log
+sudo make modules_install -j$(nproc)
+sudo make install

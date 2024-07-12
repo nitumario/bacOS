@@ -1,30 +1,223 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Event</title>
-</head>
+<html lang="ro">
+
+<style>
+    .coloane {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #nume {
+        padding: 12px 10px;
+        align-items: center;
+        background-color: #f1f3f4;
+        border: none;
+        border-bottom: 0.0625rem solid #4785d9;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        outline: none;
+    }
+    
+    #startdatetime {
+        padding: 12px 10px;
+        align-items: center;
+        background-color: #f1f3f4;
+        border: none;
+        border-bottom: 0.0625rem solid #4785d9;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        color: #707071;
+        outline: none;
+    }
+    
+    #durata {
+        padding: 12px 10px;
+        align-items: center;
+        background-color: #f1f3f4;
+        border: none;
+        border-bottom: 0.0625rem solid #4785d9;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        outline: none;
+    }
+
+    #subiecte {
+        background-color: #9888cd;
+        cursor: pointer;
+        margin-bottom: 10px;
+        width: 45%; /* Adjusted for horizontal layout */
+        padding: 10px;
+        border-radius: 10px;
+        box-sizing: border-box;
+        font-weight: bold;
+        color: #FFFFFF;
+        font-size: 15px;
+        transition: background-color 0.5s ease-in-out;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+    }
+
+    .file-buttons {
+        display: flex;
+        justify-content: space-between; /* Distribute space between buttons */
+        width: 100%;
+        align-items: center; /* Center items vertically */
+    }
+
+    .left-buttons, .right-buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    .left-buttons {
+        justify-content: flex-start;
+        width: 50%;
+    }
+
+    .right-buttons {
+        justify-content: space-between;
+        width: 50%;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    .custom-file-button {
+        display: block;
+        padding: 10px 20px;
+        background-color: #FFFFFF;
+        color: #4785d9;
+        cursor: pointer;
+        text-align: center;
+        font-size: 15px;
+        transition: background-color 0.5s ease-in-out;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        border: 0.0625rem solid #4785d9;
+        width: 75%;
+        margin-left: 40px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    .custom-file-button:hover {
+        background-color: #4785d9;
+        transition: color 0.5s ease-in-out;
+        color: #FFFFFF;
+    }
+
+    .butoane-jos {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+    }
+
+    .butoane-jos-st, .butoane-jos-dr {
+        display: flex;
+        align-items: center;
+    }
+
+    .butoane-jos-st {
+        justify-content: flex-start;
+        width: 50%;
+    }
+
+    .butoane-jos-dr {
+        justify-content: space-between;
+        width: 50%;
+    }
+
+    .buton-submit {
+        padding: 10px 20px;
+        background-color: #4785d9;
+        color: #ffffff;
+        cursor: pointer;
+        text-align: center;
+        font-size: 15px;
+        transition: background-color 0.5s ease-in-out;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        border: 0.0625rem solid #4785d9;
+        width: 75%;
+        margin-left: 40px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    /* Container for the label and checkbox */
+    .compilator {
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        width: 75%;
+        margin-left: 40px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
+    /* Style for the checkbox */
+    #compiler {
+        height: 17px;
+        width: 17px;
+        margin-right: 5px; /* Space between checkbox and text */
+        cursor: pointer; /* Change cursor to pointer when hovering */
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Style for the label */
+    #text-compilator {
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        color: #4785d9;
+        font-size: 15px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+</style>
+
 <body>
     <form action="/creare" method="post" enctype="multipart/form-data">
-        <label for="nume">Name:</label>
-        <input type="text" id="nume" name="nume" required><br><br>
+        <label for="nume"></label>
+        <input type="text" id="nume" name="nume" placeholder="Nume" required>
+    
+        <label for="startdatetime"></label>
+        <input type="datetime-local" id="startdatetime" name="startdatetime" required>
+    
+        <label for="durata"></label>
+        <input type="number" id="durata" name="durata" placeholder="Durata" required>
+    
+        <div class="file-buttons">
+            <div class="left-buttons">
+                <input type="file" id="subiecte" name="subiecte" required multiple style="display:none;">
+                <label for="subiecte" class="custom-file-button" id="custom-subiecte">Subiecte</label>
+            </div>
+            <div class="right-buttons">
+                <input type="file" id="teste" name="teste" multiple style="display:none;">
+                <label for="teste" class="custom-file-button" id="custom-teste">Teste</label>
+            </div>
+        </div>
+    
+        <div class="butoane-jos">
+            <div class="butoane-jos-st">
+                <div class="compilator">
+                    <label id="text-compilator" for="compiler">
+                        <input type="checkbox" id="compiler" name="compiler"/> Compilator?
+                    </label>
+                </div>
+            </div>
 
-        <label for="startdatetime">Start Date and Time:</label>
-        <input type="datetime-local" id="startdatetime" name="startdatetime" required><br><br>
-
-        <label for="durata">Duration (in hours):</label>
-        <input type="number" id="durata" name="durata" required><br><br>
-
-        <label for="compiler">Need Compiler:</label>
-        <input type="checkbox" id="compiler" name="compiler"><br><br>
-
-        <label for="subiecte">Upload Files:</label>
-        <input type="file" id="subiecte" name="subiecte" multiple><br><br>
-
-        <label for="teste">Upload Test Files:</label>
-        <input type="file" id="teste" name="teste" multiple><br><br>
-
-        <input type="submit" value="Create Event">
+            <div class="butoane-jos-dr">
+                <input type="submit" class="buton-submit" value="Creeaza eveniment">
+            </div>
+        </div>
     </form>
+    
 </body>
 </html>
