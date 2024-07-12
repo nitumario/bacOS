@@ -10,5 +10,9 @@ mount -t devtmpfs none /dev
 mount -t proc none /proc
 mount -t sysfs none /sys
 
-# start shell
-exec cttyhack /bin/sh
+# start BusyBox init
+exec /sbin/init
+
+
+
+
