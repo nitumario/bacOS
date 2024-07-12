@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ro">
+<link rel="icon" type="image/x-icon" href="https://convertico.com/images/1720619296.0346/_previmg.png">
 
 <head>
     <title>Acasa</title>
@@ -83,9 +84,9 @@
             padding: 12px;
             text-decoration: none;
             font-size: 18px;
-            font-family: "Google Sans", Roboto, Arial, sans-serif;
             border-top-right-radius: 30px;
             border-bottom-right-radius: 30px;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
 
         }
 
@@ -111,6 +112,11 @@
             border-top-right-radius: 30px;
             border-bottom-right-radius: 30px;
             margin-top: 5px;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+        }
+
+        .dropbtn:hover {
+            border: 0.0625rem solid #4785d9;
         }
 
         /* The container <div> - needed to position the dropdown content */
@@ -119,13 +125,14 @@
             display: inline-block;
         }
 
-        /* Dropdown Content (Hidden by Default) */
+        /* Dropdown Content */
         .dropdown-content {
-            display: none;
-            position: relative;
+            display: none; /* Initially visible */
             background-color: #f1f1f1;
             min-width: 160px;
             z-index: 1;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
         }
 
         /* Links inside the dropdown */
@@ -134,23 +141,21 @@
             padding: 12px 16px;
             text-decoration: none;
             display: block;
+            border-bottom: 0.0625rem solid #e0e0e0;
+        }
+
+        .event-blob {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            translate: 10% 20%;
+            height: 20px;
+            width: 20px;
+            border-radius: 100%;
         }
 
         /* Change color of dropdown links on hover */
         .dropdown-content a:hover {background-color: #ddd;}
-
-        /* Show the dropdown menu on hover */
-        .dropdown:hover .dropdown-content {
-            display: block;
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-
-        /* Change the background color of the dropdown button when the dropdown content is shown */
-        .dropdown:hover .dropbtn {
-            background-color: #4785d9;
-            
-        }
 
         .card-section {
             margin-top: 15px;
@@ -180,9 +185,9 @@
             height: 30%;
             background-position: center;
             background-size: cover;
-            background: #1a73e8;
             border-radius: 13px 13px 0 0;
         }
+
 
         .card-body {
             height: 45%;
@@ -215,10 +220,17 @@
         }
 
         .settings-icon {
-            display: inline-block;
-            margin-bottom: 25px;
-            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            translate: 10% 20%;
+        }
 
+        .events-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            translate: 10% 20%;
         }
 
         .punctaj {
@@ -371,6 +383,41 @@
       rel="stylesheet"/>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+<script>
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function applyColors() {
+        const cardHeaders = document.querySelectorAll('.card-header');
+        cardHeaders.forEach((header, index) => {
+            let color = localStorage.getItem(`cardColor${index}`);
+            if (!color) {
+                color = getRandomColor();
+                localStorage.setItem(`cardColor${index}`, color);
+            }
+            header.style.backgroundColor = color;
+
+            // Apply the same color to .event-blob
+            const eventBlob = header.closest('.card').querySelector('.event-blob');
+            if (eventBlob) {
+                eventBlob.style.backgroundColor = color;
+            }
+        });
+    }
+
+    // Apply colors when the page loads
+    document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+
 
 <body>
     <header>
@@ -390,14 +437,14 @@
     <main class="main">
         <section class="sidebar">
             <div class="dropdown">
-                <button class="dropbtn">Evenimente</button>
-                    <div class="dropdown-content">
-                        {% for event, id in events_with_ids %}
-                        <a>{{event}}</a>
-                        {% endfor %}
-                    </div>
+                <button class="dropbtn" onclick="toggleDropdown()"><div class="material-icons-outlined events-icon">priority_high</div>Evenimente</button>
+                <div class="dropdown-content" id="dropdown-content">
+                    {% for event, id in events_with_ids %}
+                    <a>{{event}}</a>
+                    {% endfor %}
+                </div>
             </div>
-            <a href="/setari">Setari</a>
+            <a href="/setari"><div class="material-icons-outlined settings-icon">settings</div>Setari</a>
         </section>
         <section class="card-section">
             {% for event, id in events_with_ids %}
@@ -424,6 +471,15 @@
     <div id="create-event-container"></div>
 
     <script>
+        function toggleDropdown() {
+            var dropdownContent = document.getElementById('dropdown-content');
+            if (dropdownContent.style.display === 'none') {
+                dropdownContent.style.display = 'block';
+            } else {
+                dropdownContent.style.display = 'none';
+            }
+        }
+
         document.getElementById('open-create-event').addEventListener('click', function () {
             // Show the overlay and create event container
             document.getElementById('overlay').style.display = 'block';
