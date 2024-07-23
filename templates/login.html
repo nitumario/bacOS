@@ -12,12 +12,12 @@
         }
 
         body {
-            background: #18122B;
+            background: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            font-family: 'Montserrat', sans-serif;
+            font-family: "Montserrat", sans-serif;
             height: 100vh;
             margin: -20px 0 50px;
         }
@@ -57,8 +57,8 @@
 
         button {
             border-radius: 10px;
-            border: 1px solid #9888cd;
-            background-color: #9888cd;
+            border: 1px solid #4785d9;
+            background-color: #4785d9;
             color: #FFFFFF;
             font-size: 12px;
             font-weight: bold;
@@ -93,13 +93,14 @@
         }
 
         input {
-            background-color: #eee;
-            border: 1px solid #9888cd;
+            background-color: #f1f3f4;
+            border: none;
+            border-bottom: 0.0625rem solid #4785d9;
+            outline: none;
             padding: 12px 15px;
             margin: 8px 0;
             width: 100%;
-            border-radius: 10px;
-            font-family: 'Montserrat', sans-serif;
+            font-family: "Montserrat", sans-serif;
         }
 
         .container {
@@ -173,9 +174,7 @@
         }
 
         .overlay {
-            background: #9888cd;
-            background: -webkit-linear-gradient(to right, #523d98, #8942a2);
-            background: linear-gradient(to right, #523d98, #8942a2);
+            background: #4785d9;
             background-repeat: no-repeat;
             background-size: cover;
             background-position: 0 0;
@@ -255,7 +254,7 @@
             width: 25px;
             background-color: #eee;
             border-radius: 10px;
-            border: 1px solid #9888cd;
+            border: 1px solid #4785d9;
         }
 
             /* On mouse-over, add a grey background color */
@@ -265,7 +264,7 @@
 
             /* When the checkbox is checked, add a blue background */
         .casuta input:checked ~ .checkmark {
-            background-color: #9888cd;
+            background-color: #4785d9;
         }
 
             /* Create the checkmark/indicator (hidden when not checked) */
@@ -294,30 +293,28 @@
         }
     
     </style>
-</head>
-<body>
+
 <div class="container" id="container">
 	<div class="form-container sign-up-container">
-		<form action="/register" method="post">
+		<form action="#">
 			<h1>Creează contul</h1>
-			<input type="text" name="username" placeholder="Nume" id="username_register" required />
-			<input type="email" name="email" placeholder="Email" id="email_register" required />
-			<input type="password" name="password" placeholder="Parolă" id="password_register" required />
+			<input type="text" placeholder="Nume" />
+			<input type="email" placeholder="Email" />
+			<input type="password" placeholder="Parolă" />
             <label class="casuta">Profesor
-                <input type="checkbox" checked="checked" name="type">
+                <input type="checkbox" checked="checked">
                 <span class="checkmark"></span>
             </label>
-            <button type="submit">Creează un cont</button>
-            <a href="/events">Continuă ca vizitator</a>
+            <button onclick="window.location.href='/events'">Creează un cont</button>
 		</form>
 	</div>
 	<div class="form-container sign-in-container">
-		<form action="/login" method="post">
+		<form action="#">
 			<h1>Intră în cont</h1>
-			<input type="email" name="email" placeholder="Email" id="email" required />
-			<input type="password" name="password" placeholder="Parolă" id="password" required />
+			<input type="email" placeholder="Email" />
+			<input type="password" placeholder="Parolă" />
 			<a href="#">Ai uitat parola?</a>
-            <button type="submit">Intră în cont</button>
+            <button>Intră în cont</button>
             <a href="/events">Continuă ca vizitator</a>
 		</form>
 	</div>
@@ -349,5 +346,3 @@ signInButton.addEventListener('click', () => {
 	container.classList.remove("right-panel-active");
 });
 </script>
-</body>
-</html>
