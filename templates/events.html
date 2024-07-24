@@ -5,6 +5,7 @@
 <head>
     <title>Acasa</title>
     <style>
+
         body {
             margin: 0;
         }
@@ -30,8 +31,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 0.0625rem solid #e0e0e0;
-            height: 85px;
-            padding: 20px;
+            height: 12vh;
+            padding: 5vh;
             box-sizing: border-box;
         }
 
@@ -51,32 +52,23 @@
             align-items: center;
             width: 250px;
             font-family: "Google Sans", Roboto, Arial, sans-serif;
-        }
-        
-        .navbar-menu {
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            width: 200px;
-        }
-
-        .big-img {
-            font-size: 45px;
+            margin-left: 30vh;
         }
 
         .sidebar {
             width: 40vh; /* Adjust the width of the sidebar */
-            height: 100%; /* Adjust the height to consider the navbar */
-            position: absolute;
-            top: 0; /* Adjust to match the navbar height */
-            left: 0;
+            height: 100vh;
+            position: fixed; /* Fixed position for stickiness */
+            top: 0; /* Aligns the sidebar with the top of the viewport */
+            left: 0; /* Aligns the sidebar with the left of the viewport */
             background-color: #ffffff;
             border-right: 0.0625rem solid #e0e0e0;
             box-sizing: border-box;
-            align-items: left;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
+
 
         .sidebar a {
             display: block;
@@ -87,6 +79,9 @@
             border-top-right-radius: 30px;
             border-bottom-right-radius: 30px;
             font-family: "Google Sans", Roboto, Arial, sans-serif;
+            border: 0.0625rem solid #ffffff;
+            width: 70%;
+            text-align: left;
 
         }
 
@@ -106,13 +101,13 @@
             background-color: #ffffff;
             padding: 12px;
             font-size: 18px;
-            border: none;
-            width: 100%;
             text-align: left;
             border-top-right-radius: 30px;
             border-bottom-right-radius: 30px;
-            margin-top: 5px;
             font-family: "Google Sans", Roboto, Arial, sans-serif;
+            border: 0.0625rem solid #ffffff;
+            width: 70%;
+            display: block;
         }
 
         .dropbtn:hover {
@@ -280,14 +275,14 @@
         @media only screen and (min-width: 1080px) {
             .card-section {
                 grid-template-columns: auto auto auto;
-                margin-left: 450px;
+                margin-left: 50vh;
             }
         }
 
         @media only screen and (min-width: 1900px) {
             .card-section {
                 grid-template-columns: auto auto auto auto;
-                margin-left: 470px;
+                margin-left: 60vh;
             }
         }
 
@@ -423,13 +418,12 @@
     <header>
         <nav class="navbar">
             <section class="navbar-brand">
-                <span class="material-icons menu-icon">menu</span>
                 <span class="brand-text">bacOS</span>
             </section>
+
             <section class="navbar-menu">
                 <span class="material-icons add-icon" id="open-create-event">add</span>
-                <span class="material-icons apps-icon">apps</span>
-                <span class="material-icons big-img account-icon">account_circle</span>
+                <span class="material-icons account-icon">account_circle</span>
             </section>
         </nav>
     </header>
@@ -452,7 +446,7 @@
                 <div class="card-header">
                     <h1 class="subject-name">{{ id }} - {{ event }}</h1>
                 </div>
-                <div class="card-body"></div>
+                <div class="card-body" onclick="window.location.href='/event/{{id}}'"></div>
                 <div class="card-footer">
                     <span class="punctaj" onclick="window.location.href='https://youtube.com'">
                         {{punctaj}}

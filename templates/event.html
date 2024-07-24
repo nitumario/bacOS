@@ -2,22 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Event - {{ event_data.nume }}</title>
+    <title>Editeaza evenimentul - {{ event_data.nume }}</title>
     <style>
+        form {
+            display: block; /* Display form as a block */
+            position: fixed; /* Fixed position to overlay the page */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the modal */
+            background-color: #fff; /* White background */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px; /* Inner padding */
+            z-index: 1000; /* Positioned above the overlay */
+            width: 100%;
+            max-width: 600px; /* Max width for the modal */
+            overflow: auto; /* Enable scrolling if content overflows */
+            align-items: center;
+        }
+        
         /* Styling for overlay and container */
         #overlay {
-            display: none;
-            position: fixed;
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position to overlay the page */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-            z-index: 1000; /* Higher than most elements */
+            z-index: 1000; /* Positioned above the page content */
         }
 
         #edit-container {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             top: 50%;
             left: 50%;
@@ -30,108 +47,237 @@
             max-width: 600px;
             width: 80%;
         }
+
+        input[type=submit], button {
+            padding: 10px 20px;
+            background-color: #4785d9;
+            color: #ffffff;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            transition: background-color 0.5s ease-in-out;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 0.0625rem solid #4785d9;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            align-items: center;
+        }
+
+        input[type=submit]:hover, button:hover {
+            background-color: #FFFFFF;
+            transition: color 0.5s ease-in-out;
+            color: #4785d9;
+        }
+
+        input[type=text], input[type=number] {
+            padding: 12px 3px;
+            margin-top: 20px;
+            align-items: center;
+            background-color: #f1f3f4;
+            border: none;
+            border-bottom: 0.0625rem solid #4785d9;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            outline: none;
+            width: 99%;
+        }
+
+        #startdatetime {
+            padding: 12px 3px;
+            align-items: center;
+            background-color: #f1f3f4;
+            border: none;
+            border-bottom: 0.0625rem solid #4785d9;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #000000;
+            outline: none;
+            margin-top: 20px;
+            width: 99%;
+        }
+
+        .compilator {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            width: 75%;
+            margin-left: 70px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        /* Style for the checkbox */
+        #compiler {
+            height: 17px;
+            width: 17px;
+            margin-right: 5px; /* Space between checkbox and text */
+            cursor: pointer; /* Change cursor to pointer when hovering */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Style for the label */
+        #text-compilator {
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #4785d9;
+            font-size: 15px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .subiecte-grupare {
+            border-radius: 10px;
+            width: 75%;
+            background-color: #f1f3f4;
+            padding: 10px;
+            margin-left: 70px;
+            align-items: center;
+            justify-content: center;
+            text-align: center; /* Center align the text within the group */
+            max-height: 140px; /* Set a max height for the box */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+
+        .subiecte-grupare a {
+            display: block;
+            color: #4785d9;
+            text-decoration: none;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            font-size: 15px;
+            margin: 0 auto;
+            margin-bottom: 5px;
+            border-bottom: 0.0625rem solid #43484f;
+            width: fit-content;
+        }
+
+
+        .subiecte-grupare h2 {
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #4785d9;
+            font-size: 30px;
+            margin: 0 auto; /* Ensure block elements are centered */
+            text-align: center; /* Center align the h2 text */
+            margin-bottom: 20px;
+        }
+
+        .id{
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #000000;
+            font-size: 20px;
+            margin: 0 auto; /* Ensure block elements are centered */
+            text-align: center; /* Center align the h2 text */
+            font-weight: bold;
+        }
+
+
     </style>
 </head>
 <body>
-    <h1>Edit Event</h1>
-    <form id="edit-event-form" action="{{ url_for('edit_event', id=event_data.id) }}" method="post">
-        <p><strong>ID:</strong> {{ event_data.id }}</p>
+    <form id="static-edit-event-form" action="{{ url_for('edit_event', id=event_data.id) }}" method="post">
+        <p><div class="id">ID:{{ event_data.id }}</div></p>
+        
         <p>
-            <label for="nume">Name:</label>
-            <input type="text" id="nume" name="nume" value="{{ event_data.nume }}">
+            <label for="nume"></label>
+            <input type="text" id="nume" name="nume" value="{{ event_data.nume }}" placeholder="Nume">
         </p>
+        
         <p>
-            <label for="startdatetime">Start Date and Time:</label>
+            <label for="startdatetime"></label>
             <input type="datetime-local" id="startdatetime" name="startdatetime" value="{{ event_data.startdatetime|datetimeformat }}">
         </p>
+        
         <p>
-            <label for="durata">Duration:</label>
+            <label for="durata"></label>
             <input type="number" id="durata" name="durata" value="{{ event_data.durata }}">
         </p>
+        
         <p>
-            <label for="compiler">Compiler:</label>
-            <input type="checkbox" id="compiler" name="compiler" {% if event_data.compiler %}checked{% endif %}>
+            <div class="compilator">
+                <label id="text-compilator" for="compiler">
+                    <input type="checkbox" id="compiler" name="compiler" {% if event_data.compiler %}checked{% endif %}/> Compilator?
+                </label>
+            </div>
         </p>
-        <h2>Subjects</h2>
-        <ul>
+
+        <div class="subiecte-grupare">
+            <h2>Subiecte</h2>
             {% for subiect in event_data.subiecte %}
-                <li>{{ subiect }}</li>
+                <a href="/schimba-linkul-asta-prostule" download>{{ subiect }}</a>
             {% endfor %}
-        </ul>
+        </div>
+
         <p>
-            <input type="submit" value="Save Changes">
+            <button type="button" id="open-edit-form">Genereaza teste de compilare</button>
+            <input type="submit" value="Salveaza schimbarile" onclick="window.location.href='/events/'">
         </p>
+
     </form>
 
-    <!-- Button to open edit form in a container -->
-    <button id="open-edit-form">Edit Event</button>
-
-    <!-- Container for displaying the edit form -->
     <div id="overlay"></div>
     <div id="edit-container"></div>
 
-    <!-- jQuery CDN (you can use a local copy if preferred) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
-        $(document).ready(function() {
-            // Handle click on "Edit Event" button
-            $('#open-edit-form').click(function() {
-                var currentId = {{ event_data.id }};
-                var url = '/gentest/' + currentId;
+        document.getElementById('open-edit-form').addEventListener('click', function () {
+            var currentId = {{ event_data.id }};
+            var url = '/gentest/' + currentId;
 
-                // AJAX request to fetch the edit form
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        // On success, display the form in the container
-                        $('#edit-container').html(response);
-                        $('#overlay').fadeIn();
-                        $('#edit-container').fadeIn();
-                        attachFormSubmitHandler();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching edit form:', error);
-                    }
-                });
-            });
+            // Display the overlay and edit container
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('edit-container').style.display = 'block';
 
-            // Close the container when clicking on overlay
-            $('#overlay').click(function() {
-                $('#overlay').fadeOut();
-                $('#edit-container').fadeOut();
-            });
+            // Make AJAX request to fetch the form content
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Insert the form content into the container
+                    document.getElementById('edit-container').innerHTML = xhr.responseText;
 
-            // Function to attach form submit handler
-            function attachFormSubmitHandler() {
-                $('#edit-event-form').submit(function(event) {
-                    event.preventDefault(); // Prevent the default form submission
+                    // Add event listener to the form submission
+                    var form = document.querySelector('#edit-container form');
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault(); // Prevent the default form submission
 
-                    var formData = $(this).serialize(); // Serialize the form data
+                        // Create FormData object from the form
+                        var formData = new FormData(form);
 
-                    console.log('Submitting form via AJAX:', formData);
+                        // Make AJAX POST request to submit the form data
+                        var xhrSubmit = new XMLHttpRequest();
+                        xhrSubmit.open('POST', form.action, true);
+                        xhrSubmit.onreadystatechange = function () {
+                            if (xhrSubmit.readyState === 4 && xhrSubmit.status === 200) {
 
-                    $.ajax({
-                        url: $(this).attr('action'),
-                        type: 'POST',
-                        data: formData,
-                        success: function(response) {
-                            // Handle successful response (e.g., show a message or update part of the page)
-                            alert('Event updated successfully!');
-                            $('#overlay').fadeOut();
-                            $('#edit-container').fadeOut();
-                        },
-                        error: function(xhr, status, error) {
-                            // Handle error response
-                            console.error('Error submitting form:', error);
-                        }
+                                // Hide the overlay and edit container
+                                document.getElementById('overlay').style.display = 'none';
+                                document.getElementById('edit-container').style.display = 'none';
+                            } else if (xhrSubmit.readyState === 4) {
+                                // Handle error response
+                                console.error('Error submitting form:', xhrSubmit.statusText);
+                            }
+                        };
+                        xhrSubmit.send(formData);
                     });
-                });
-            }
+                } else if (xhr.readyState === 4) {
+                    console.error('Error fetching edit form:', xhr.statusText);
+                }
+            };
+            xhr.send();
+        });
 
-            // Initial call to ensure handler is attached if the form is already in the DOM
-            attachFormSubmitHandler();
+        // Hide the form and overlay when clicking outside of the container
+        document.getElementById('overlay').addEventListener('click', function () {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('edit-container').style.display = 'none';
+        });
+
+        // Prevent click event on edit-container from propagating to overlay
+        document.getElementById('edit-container').addEventListener('click', function (event) {
+            event.stopPropagation();
         });
     </script>
 </body>
