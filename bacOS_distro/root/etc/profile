@@ -1,0 +1,33 @@
+# System variables
+export PATH=$PATH:/sbin:/usr/local/bin:/usr/local/sbin:/home/msmd/.local:/home/msmd/.X
+export LD_LIBRARY_PATH=/lib:/usr/local/lib
+export TZ=EET-2EEST,M3.5.0/3,M10.5.0/4 sh
+
+# Allow insecure downloading of Golang packages
+export GOINSECURE="proxy.golang.org/*,github.com,github.com/*"
+export GONOSUMDB="proxy.golang.org/*,github.com,github.com/*"
+export GOPRIVATE="proxy.golang.org/*,github.com,github.com/*"
+
+# Aliases
+alias reboot="sudo reboot"
+alias poweroff="sudo poweroff"
+alias ethernet="sudo ethernet"
+alias wifi="sudo wifi"
+alias wget="wget --no-check-certificate"
+
+# TCZ app repository
+export TCZ=http://tinycorelinux.net/14.x/x86_64/tcz/
+
+# Adjust brightness
+# echo 20000 | sudo tee /sys/class/backlight/intel_backlight/brightness > /dev/null
+
+# Connect to WiFi
+# wifi
+
+# Init audio
+# alsactl init 2
+# /usr/local/etc/init.d/dbus start
+# eval $(dbus-launch --sh-syntax) pulseaudio --start
+
+# Start X server
+# startx

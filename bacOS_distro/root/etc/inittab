@@ -1,0 +1,5 @@
+::sysinit:clear
+::restart:/sbin/init
+::shutdown:sync
+::ctrlaltdel:/sbin/reboot
+::respawn:/bin/cttyhack login -f msmd

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<JWM>
+   <!-- Additional tray attributes: autohide, width, border, layer, layout -->
+   <Tray x="0" y="-1" height="20">
+     <TrayButton label="#">showdesktop</TrayButton>
+     <TaskList/>
+     <Dock/>
+     <TrayButton label="$">exec:aterm</TrayButton>
+     <TrayButton label="&">exec:editor</TrayButton>
+     <TrayButton label="@">exec:/home/msmd/firefox/firefox</TrayButton>
+     <TrayButton label="||">exec:</TrayButton>
+     <Clock format="%a %d %b %k:%M"></Clock>
+     <TrayButton label="||">exec:</TrayButton>
+     <TrayButton label="_">exec:sudo kill $WM_PID $XPID</TrayButton>
+     <TrayButton label="[]">exec:sudo reboot</TrayButton>
+     <TrayButton label="X">exec:sudo poweroff</TrayButton>
+   </Tray>
+</JWM>

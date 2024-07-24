@@ -40,7 +40,7 @@ get_busybox(){
 config_busybox(){
     cd busybox-1.33.1
     wget  https://raw.githubusercontent.com/nitumario/bacOS/main/bacOS_distro/busybox.cfg -O .config
-}
+}   
 
 build_busybox(){
     make -j$(nproc)
