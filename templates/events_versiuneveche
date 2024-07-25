@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ro">
+<link rel="icon" type="image/x-icon" href="https://convertico.com/images/1720619296.0346/_previmg.png">
+
+<head>
+    <title>Acasa</title>
+    <style>
+
+        body {
+            margin: 0;
+        }
+
+        .material-icons,
+        .material-icons-outlined {
+            font-size: 35px;
+            cursor: pointer;
+            color: #5f6368;
+        }
+
+        .main {
+            padding: 30px;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 0.0625rem solid #e0e0e0;
+            height: 12vh;
+            padding: 5vh;
+            box-sizing: border-box;
+        }
+
+        .brand-logo {
+            width: 74px;
+            height: 24px;
+        }
+
+        .brand-text {
+            font-family: "Product Sans", Arial, Helvetica, sans-serif;
+            font-size: 1.38125rem;
+        }
+
+        .navbar-brand {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 250px;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            margin-left: 30vh;
+        }
+
+        .sidebar {
+            width: 40vh; /* Adjust the width of the sidebar */
+            height: 100vh;
+            position: fixed; /* Fixed position for stickiness */
+            top: 0; /* Aligns the sidebar with the top of the viewport */
+            left: 0; /* Aligns the sidebar with the left of the viewport */
+            background-color: #ffffff;
+            border-right: 0.0625rem solid #e0e0e0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+
+        .sidebar a {
+            display: block;
+            color: #333;
+            padding: 12px;
+            text-decoration: none;
+            font-size: 18px;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            border: 0.0625rem solid #ffffff;
+            width: 70%;
+            text-align: left;
+
+        }
+
+        .sidebar a:hover {
+            border: 0.0625rem solid #4785d9;
+        }
+
+        .siderbar-icons {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 200px;
+        }
+    
+        .dropbtn {
+            color: #333;
+            background-color: #ffffff;
+            padding: 12px;
+            font-size: 18px;
+            text-align: left;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            border: 0.0625rem solid #ffffff;
+            width: 70%;
+            display: block;
+        }
+
+        .dropbtn:hover {
+            border: 0.0625rem solid #4785d9;
+        }
+
+        /* The container <div> - needed to position the dropdown content */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Content */
+        .dropdown-content {
+            display: none; /* Initially visible */
+            background-color: #f1f1f1;
+            min-width: 160px;
+            z-index: 1;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 0.0625rem solid #e0e0e0;
+        }
+
+        .event-blob {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            translate: 10% 20%;
+            height: 20px;
+            width: 20px;
+            border-radius: 100%;
+        }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {background-color: #ddd;}
+
+        .card-section {
+            margin-top: 15px;
+            display: grid;
+            grid-column-gap: 30px 30px;
+            justify-content: flex-start;
+            margin-left: 400px;
+            position: relative;
+        }
+
+        .card {
+            border: 0.0625rem solid #dadce0;
+            height: 21.355rem;
+            width: 20rem;
+            margin-right: 33px;
+            margin-bottom: 20px;
+            text-align: left;
+            border-radius: 13px;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .card-header {
+            position: relative;
+            padding: 15px;
+            height: 30%;
+            background-position: center;
+            background-size: cover;
+            border-radius: 13px 13px 0 0;
+        }
+
+
+        .card-body {
+            height: 45%;
+            color: #000000;
+        }
+
+        .card-footer {
+            border-top: 0.0625rem solid #dadce0;
+            height: 25%;
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .subject-name {
+            font-size: 30px;
+            line-height: 1.75rem;
+        }
+
+        .section {
+            font-size: 18px;
+            margin: 3px 0 3px 0;
+        }
+        
+        .folder-icon {
+            display: inline-block;
+            margin-bottom: 25px;
+            margin-right: 15px;
+        }
+
+        .settings-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            translate: 10% 20%;
+        }
+
+        .events-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            translate: 10% 20%;
+        }
+
+        .punctaj {
+            color: #5f6368;
+            font-size: 20px;
+            display: inline-block;
+            margin-bottom: 25px;
+            margin-right: 230px;
+            font-weight: bold;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .card-section {
+                grid-template-columns: auto;
+            }
+            .add-icon {
+                position: absolute;
+            }
+
+            .account-icon {
+                display: none;
+            }
+
+            .sidebar {
+                width: 10vh;
+            }
+
+            .navbar {
+                padding: 3vh;
+            }
+
+            .navbar-brand {
+                margin-left: 3vh;
+            }
+        }
+
+        @media only screen and (min-width: 768px) {
+            .card-section {
+                grid-template-columns: auto auto;
+            }
+
+            .sidebar {
+                width: 10vh;
+            }
+
+            .navbar {
+                padding: 3vh;
+            }
+
+            .navbar-brand {
+                margin-left: 3vh;
+            }
+        }
+
+        @media only screen and (min-width: 992px) {
+            .card-section {
+                grid-template-columns: auto auto auto;
+            }
+
+            .sidebar {
+                width: 40vh;
+            }
+
+            .navbar {
+                padding: 5vh;
+            }
+
+            .navbar-brand {
+                margin-left: 30vh;
+            }
+        }
+
+        @media only screen and (min-width: 1080px) {
+            .card-section {
+                grid-template-columns: auto auto auto;
+                margin-left: 50vh;
+            }
+        }
+
+        @media only screen and (min-width: 1900px) {
+            .card-section {
+                grid-template-columns: auto auto auto auto;
+                margin-left: 60vh;
+            }
+        }
+
+        @media only screen and (max-width: 1400px) {
+            material-icons.apps-icon,
+            material-icons.account-icon {
+                display: none;
+            }
+            .navbar {
+                height: 80px;
+            }
+            .navbar-menu {
+                justify-content: flex-end;
+            }
+            .secondary-icon-container {
+                width: 24px;
+                height: 24px;
+                margin-right: 35px;
+                padding: 0;
+            }
+            .secondary-icon-text {
+                display: none;
+            }
+            .brand-logo {
+                margin-left: 15px;
+                margin-right: 5px;
+            }
+            .main {
+                padding: 20px;
+            }
+            .card {
+                height: 21.355rem;
+                width: 19rem;
+                margin-right: 33px;
+                margin-bottom: 20px;
+            }
+
+            .card-section {
+                margin-left: 300px;
+                display: grid;
+                grid-column-gap: 30px 30px;
+                grid-template-columns: auto auto;
+                position: relative;
+            }
+        }
+
+        #overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position to cover the entire screen */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 999; /* Positioned above all other content */
+        }
+
+        #create-event-container {
+            display: none; /* Hidden by default */
+            position: fixed; /* Fixed position to overlay the page */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the modal */
+            background-color: #fff; /* White background */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px; /* Inner padding */
+            z-index: 1000; /* Positioned above the overlay */
+            width: 80%;
+            max-width: 600px; /* Max width for the modal */
+            overflow: auto; /* Enable scrolling if content overflows */
+        }
+        
+        #create-event-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #create-event-container form label,
+        #create-event-container form input {
+            margin-bottom: 10px;
+        }
+
+        #create-event-container form input[type="submit"] {
+            align-self: flex-end;
+        }
+        
+    </style>
+</head>
+
+<link
+      href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+      rel="stylesheet"/>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+<script>
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function applyColors() {
+        const cardHeaders = document.querySelectorAll('.card-header');
+        cardHeaders.forEach((header, index) => {
+            let color = localStorage.getItem(`cardColor${index}`);
+            if (!color) {
+                color = getRandomColor();
+                localStorage.setItem(`cardColor${index}`, color);
+            }
+            header.style.backgroundColor = color;
+
+            // Apply the same color to .event-blob
+            const eventBlob = header.closest('.card').querySelector('.event-blob');
+            if (eventBlob) {
+                eventBlob.style.backgroundColor = color;
+            }
+        });
+    }
+
+    // Apply colors when the page loads
+    document.addEventListener('DOMContentLoaded', applyColors);
+</script>
+
+
+
+<body>
+    <header>
+        <nav class="navbar">
+            <section class="navbar-brand">
+                <span class="brand-text">bacOS</span>
+            </section>
+
+            <section class="navbar-menu">
+                <span class="material-icons add-icon" id="open-create-event">add</span>
+                <span class="material-icons account-icon">account_circle</span>
+            </section>
+        </nav>
+    </header>
+
+    <main class="main">
+        <section class="sidebar">
+            <div class="dropdown">
+                <button class="dropbtn" onclick="toggleDropdown()"><div class="material-icons-outlined events-icon">priority_high</div>Evenimente</button>
+                <div class="dropdown-content" id="dropdown-content">
+                    {% for event, id in events_with_ids %}
+                    <a>{{event}}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <a href="/setari"><div class="material-icons-outlined settings-icon">settings</div>Setari</a>
+        </section>
+        <section class="card-section">
+            {% for event, id in events_with_ids %}
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="subject-name">{{ id }} - {{ event }}</h1>
+                </div>
+                <div class="card-body" onclick="window.location.href='/event/{{id}}'"></div>
+                <div class="card-footer">
+                    <span class="punctaj" onclick="window.location.href='https://youtube.com'">
+                        {{punctaj}}
+                    </span>
+                    <span class="material-icons-outlined folder-icon">folder</span>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+
+
+
+
+    <div id="overlay"></div>
+    <div id="create-event-container"></div>
+
+    <script>
+        function toggleDropdown() {
+            var dropdownContent = document.getElementById('dropdown-content');
+            if (dropdownContent.style.display === 'none') {
+                dropdownContent.style.display = 'block';
+            } else {
+                dropdownContent.style.display = 'none';
+            }
+        }
+
+        document.getElementById('open-create-event').addEventListener('click', function () {
+            // Show the overlay and create event container
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('create-event-container').style.display = 'block';
+
+            // Make AJAX request to fetch the form content
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/creare', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    // Insert the form content into the container
+                    document.getElementById('create-event-container').innerHTML = xhr.responseText;
+
+                    // Add event listener to the form submission
+                    var form = document.querySelector('#create-event-container form');
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault(); // Prevent the default form submission
+
+                        // Create FormData object from the form
+                        var formData = new FormData(form);
+
+                        // Make AJAX POST request to submit the form data
+                        var xhrSubmit = new XMLHttpRequest();
+                        xhrSubmit.open('POST', '/creare', true);
+                        xhrSubmit.onreadystatechange = function () {
+                            if (xhrSubmit.readyState === 4 && xhrSubmit.status === 200) {
+                                // Handle successful response
+                                alert('Eveniment creat!');
+
+                                // Hide the overlay and create event container
+                                document.getElementById('overlay').style.display = 'none';
+                                document.getElementById('create-event-container').style.display = 'none';
+                            }
+                        };
+                        xhrSubmit.send(formData);
+                    });
+                }
+            };
+            xhr.send();
+        });
+
+        // Hide the form and overlay when clicking outside of the container
+        document.getElementById('overlay').addEventListener('click', function () {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('create-event-container').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
