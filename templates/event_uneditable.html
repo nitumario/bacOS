@@ -2,20 +2,139 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ event_data.nume }}</title>
+    <title>Editeaza evenimentul - {{ event_data.nume }}</title>
+    <style>
+        body {
+            display: block; /* Display form as a block */
+            position: fixed; /* Fixed position to overlay the page */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center the modal */
+            background-color: #fff; /* White background */
+            border-radius: 20px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px; /* Inner padding */
+            z-index: 1000; /* Positioned above the overlay */
+            width: 100%;
+            max-width: 600px; /* Max width for the modal */
+            overflow: auto; /* Enable scrolling if content overflows */
+            align-items: center;
+        }
+
+        .info {
+            margin-bottom: 30px;
+        }
+
+        .id, .nume, .punctaj, .data {
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #000000;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto; /* Center align */
+            margin-top: 0px; /* Add some spacing */
+        }
+
+        .label{
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #000000;
+            font-size: 18px;
+            text-align: center;
+            margin: 0 auto; /* Center align */
+            margin-top: 10px; /* Add some spacing */
+        }
+
+        .label {
+            font-weight: bold;
+            color: #4785d9;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .subiecte-grupare {
+            border-radius: 10px;
+            width: 75%;
+            background-color: #f1f3f4;
+            padding: 10px;
+            margin-left: 70px;
+            align-items: center;
+            justify-content: center;
+            text-align: center; /* Center align the text within the group */
+            max-height: 140px; /* Set a max height for the box */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin-top: 30px;
+        }
+
+        .subiecte-grupare a {
+            display: block;
+            color: #4785d9;
+            text-decoration: none;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            font-size: 15px;
+            margin: 0 auto;
+            margin-bottom: 5px;
+            border-bottom: 0.0625rem solid #43484f;
+            width: fit-content;
+        }
+
+        .subiecte-grupare h2 {
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            color: #4785d9;
+            font-size: 30px;
+            margin: 0 auto; /* Ensure block elements are centered */
+            text-align: center; /* Center align the h2 text */
+            margin-bottom: 20px;
+        }
+
+        .but-acasa {
+            padding: 10px 20px;
+            background-color: #4785d9;
+            color: #ffffff;
+            cursor: pointer;
+            text-align: center;
+            font-size: 15px;
+            transition: background-color 0.5s ease-in-out;
+            font-family: "Google Sans", Roboto, Arial, sans-serif;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 0.0625rem solid #4785d9;
+            width: 100%;
+            margin-top: 20px;
+            border-radius: 10px;
+            align-items: center;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Event Details</h1>
-    <p><strong>ID:</strong> {{ event_data.id }}</p>
-    <p><strong>Name:</strong> {{ event_data.nume }}</p>
-    <p><strong>Start Date and Time:</strong> {{ event_data.startdatetime }}</p>
-    <p><strong>Duration:</strong> {{ event_data.durata }}</p>
-    <p><strong>Compiler:</strong> {{ event_data.compiler }}</p>
-    <h2>Subjects</h2>
-    <ul>
+    <div class="info">
+        <div class="label">Id unic</div>
+        <div class="id">{{ event_data.id }}</div>
+    </div>
+
+    <div class="info">
+        <div class="label">Nume</div>
+        <div class="nume">{{ event_data.nume }}</div>
+    </div>
+
+    <div class="info">
+        <div class="label">Data și ora</div>
+        <div class="data">{{ event_data.startdatetime|datetimeformat }}</div>
+    </div>
+
+    <div class="info">
+        <div class="label">Punctajul</div>
+        <div class="punctaj">{{ punctaj }}</div>
+    </div>
+    
+    <div class="subiecte-grupare">
+        <h2>Subiecte</h2>
         {% for subiect in event_data.subiecte %}
-            <li>{{ subiect }}</li>
+        <a href="/{{subiect}}" download>{{ subiect }}</a>
         {% endfor %}
-    </ul>
+    </div>
+
+    <button class="but-acasa" onclick="window.location.href='/events'">Pagina principala</button>
 </body>
 </html>
