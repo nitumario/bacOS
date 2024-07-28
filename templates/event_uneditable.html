@@ -131,9 +131,10 @@
     <div class="subiecte-grupare">
         <h2>Subiecte</h2>
         {% for subiect in event_data.subiecte %}
-        <a href="/{{subiect}}" download>{{ subiect }}</a>
+        <a href="{{ url_for('download_file', id=event_data.id, file_path=subiect) }}" download>{{ subiect }}</a>
         {% endfor %}
     </div>
+    
 
     <button class="but-acasa" onclick="window.location.href='/events'">Pagina principala</button>
 </body>
