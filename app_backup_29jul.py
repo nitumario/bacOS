@@ -5,11 +5,13 @@ import json
 from datetime import datetime
 import uuid
 
+
+
 app = Flask(__name__)
 app.secret_key = 'test'
 db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
-ip = '192.168.0.80'
+ip = '192.168.56.1'
 
 def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
     if isinstance(value, str):
@@ -21,12 +23,13 @@ app.jinja_env.filters['datetimeformat'] = datetimeformat
 
 
 
+
+
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)  
     flash('You have been logged out', 'success')
     return redirect(url_for('login'))   
-
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -54,9 +57,8 @@ def register():
 
         return redirect(url_for('events'))
 
+
     return render_template('login.html')
-
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -73,7 +75,7 @@ def login():
             session['uuid'] = result[5]
             session['type'] = result[3]
             print("user: ", session['uuid'], "with type: ", session['type'])
-            return redirect(url_for('events.html'))
+            return redirect(url_for('events'))
         else:
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
@@ -81,10 +83,12 @@ def login():
     
 
 
+
+
 @app.route('/creare', methods=['GET', 'POST'])
 def creare():
-    #modifica doar pt profesori
     if 'logged_in' in session and session['logged_in']:
+
         if request.method == 'POST':
             nume = request.form.get('nume')
             startdatetime = request.form.get('startdatetime')
@@ -115,7 +119,6 @@ def creare():
         return redirect(url_for('login'))
 
 
-
 @app.route('/api/event/<int:id>', methods=['GET'])
 def api_event(id):
     cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
@@ -132,12 +135,13 @@ def api_event(id):
         return jsonify(event_data)
     else:
         return jsonify({'error': 'Event not found'}), 404
+    
+
 
 
 
 @app.route('/gentest/<int:id>', methods=['GET', 'POST'])
 def gentest(id):
-    #doar pentru profesori
     if 'logged_in' in session and session['logged_in']:
         if request.method == 'POST':
 
@@ -176,29 +180,17 @@ def gentest(id):
     else:
         return redirect(url_for('login'))
 
-
-
 @app.route('/events', methods=['GET'])
 def events():
-    if 'logged_in' in session and session['logged_in']:
-        cursor.execute("SELECT username FROM users WHERE UUID = %s", (session['uuid'],))
-        user = cursor.fetchone()
-        if user:
-            username = user[0]
-        else:
-            username = None
-
     cursor.execute("SELECT id, nume FROM events")
     events = cursor.fetchall()
     events_with_ids = [(event[1], event[0]) for event in events]
 
-    return render_template('events.html', events_with_ids=events_with_ids, username=username)
-
-
+    return render_template('events.html', events_with_ids=events_with_ids)
 
 @app.route('/event/<id>', methods=['GET', 'POST'])
 def event(id):
-    punctaj = 100
+
     cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
     event = cursor.fetchone()
     event_data = {
@@ -209,19 +201,14 @@ def event(id):
         'compiler': event[5],
         'subiecte': os.listdir(f"events\\{id}")
     }
-    #sa fie pt profesori if ul ca sa fie else ul pt elevi
-    if 'logged_in' in session and session['logged_in']:
+    if 'logged_in' in session and session['logged_in'] and session['type'] == 'profesor':
         return render_template('event.html', event_data=event_data)
     else:
         print("meow")
-        return render_template('event_uneditable.html', event_data=event_data, readonly=True, punctaj=punctaj)
+        return render_template('event_uneditable.html', event_data=event_data, readonly=True)
 
 
 
-@app.route('/event/<int:id>/<path:file_path>')
-def download_file(id, file_path):
-    directory = os.path.join("events", str(id))
-    return send_from_directory(directory, file_path, as_attachment=True)
 
 
 
@@ -243,54 +230,11 @@ def edit_event(id):
         db.commit()
 
         flash('Event updated successfully', 'success')
-        return redirect(url_for('events'))
+        return redirect(url_for('event', id=id))
     else:
         return redirect(url_for('login'))
-    
-
-
-@app.route('/user/<username>', methods=['GET', 'POST'])
-def edit_user(username):
-    if 'logged_in' in session and session['logged_in']:
-        if request.method == 'POST':
-            new_username = request.form.get('username')
-            new_email = request.form.get('email')
-            new_password = request.form.get('password')
-            
-            query = """
-                UPDATE users 
-                SET username = %s, email = %s, password = %s
-                WHERE username = %s
-            """
-            cursor.execute(query, (new_username, new_email, new_password, username))
-            db.commit()
-            
-            flash('User details updated successfully', 'success')
-            return redirect(url_for('edit_user', username=new_username))
-        
-        query = "SELECT username, email, password FROM users WHERE username = %s"
-        cursor.execute(query, (username,))
-        user = cursor.fetchone()
-        
-        if not user:
-            flash('User not found', 'error')
-            return redirect(url_for('events'))
-        
-        user_data = {
-            'username': user[0],
-            'email': user[1],
-            'password': user[2]
-        }
-        
-        return render_template('user.html', user_data=user_data)
-
-
-
-@app.route('/despre', methods=['GET'])
-def despre():
-    return render_template('despre.html')
-
 
 
 if __name__ == '__main__':
     app.run(host = ip, port=80, debug=True)
+
