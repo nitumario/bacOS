@@ -145,7 +145,27 @@ def api_event(id):
     else:
         return jsonify({'error': 'Event not found'}), 404
 
+@app.route('/subiecte/<int:id>', methods=['GET'])
+def subiecte(id):
+    return jsonify(os.listdir(f"events\\{id}"))
 
+@app.route('/durata/<int:id>', methods=['GET'])
+def durata(id):
+    cursor.execute("SELECT durata FROM events WHERE id = %s", (id,))
+    durata = cursor.fetchone()
+    return jsonify(durata[0])
+
+@app.route('/compiler/<int:id>', methods=['GET'])
+def compiler(id):
+    cursor.execute("SELECT compiler FROM events WHERE id = %s", (id,))
+    compiler = cursor.fetchone()
+    return jsonify(compiler[0])
+
+@app.route('/startdatetime/<int:id>', methods=['GET'])
+def startdatetime(id):
+    cursor.execute("SELECT startdatetime FROM events WHERE id = %s", (id,))
+    startdatetime = cursor.fetchone()
+    return jsonify(startdatetime[0])
 
 @app.route('/gentest/<int:id>', methods=['GET', 'POST'])
 def gentest(id):

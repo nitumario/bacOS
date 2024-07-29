@@ -9,19 +9,19 @@ if __name__ == "__main__":
 
 
 
-data = {
-    'email': email,
-    'password': password
-}
+    data = {
+        'email': email,
+        'password': password
+    }
 
-response = requests.post(url, data=data)
+    response = requests.post(url, data=data)
 
-if response.status_code == 200:
-    os.system("mkdir -p /home/participant/" + email)
-    os.system("./code")
-elif response.status_code == 401:
-    print("Unauthorized")
-    os.system("./login")
-else:
-    print(f"Unexpected status code: {response.status_code}")
+    if response.status_code == 200:
+        os.system("mkdir -p /home/participant/" + email)
+        os.system("./code")
+    elif response.status_code == 401:
+        print("Unauthorized")
+        os.system("./login")
+    else:
+        print(f"Unexpected status code: {response.status_code}")
 
