@@ -1,8 +1,27 @@
 import os
 import sys
-ip = 
+import requests
+url = 'http://192.168.0.54/loginapi'
 
 if __name__ == "__main__":
-    mail = sys.argv[1]
+    email = sys.argv[1]
     password = sys.argv[2]
+
+
+
+data = {
+    'email': email,
+    'password': password
+}
+
+response = requests.post(url, data=data)
+
+if response.status_code == 200:
+    os.system("mkdir -p /home/participant/" + email)
+    os.system("./code")
+elif response.status_code == 401:
+    print("Unauthorized")
+    os.system("./login")
+else:
+    print(f"Unexpected status code: {response.status_code}")
 

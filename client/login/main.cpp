@@ -7,13 +7,14 @@
 #include <QScreen>
 #include <QDebug>
 #include <QTimer>
+#include <QProcess>
 
 class LoginWindow : public QWidget {
     Q_OBJECT
 
 public:
-    LoginWindow(QWidget *parent = nullptr) : QWidget(parent) {
-        setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowTransparentForInput);
+    LoginWindow(QWidget *parent = nullptr) : QWidget(parent), process(new QProcess(this)) {
+        setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
         setStyleSheet("background-color: white;");
 
@@ -29,6 +30,20 @@ public:
         QPushButton *loginButton = new QPushButton("Login", this);
         connect(loginButton, &QPushButton::clicked, this, &LoginWindow::onLoginClicked);
 
+        loginButton->setStyleSheet(
+            "QPushButton {"
+            "    background-color: #e0e0e0;"   // Default background color
+            "    border: 1px solid #ccc;"       // Border color
+            "    padding: 10px;"                // Padding around the text
+            "    font-size: 16px;"              // Font size
+            "}"
+            "QPushButton:hover {"
+            "    background-color: #d0d0d0;"   // Darken background color on hover
+            "}"
+            "QPushButton:pressed {"
+            "    background-color: #c0c0c0;"   // Further darken background color when pressed
+            "}");
+
         QVBoxLayout *formLayout = new QVBoxLayout;
         formLayout->addWidget(emailLabel);
         formLayout->addWidget(emailInput);
@@ -36,7 +51,7 @@ public:
         formLayout->addWidget(passwordInput);
         formLayout->addWidget(loginButton);
         formLayout->setSpacing(10);
-        formLayout->setContentsMargins(20, 20, 20, 20); 
+        formLayout->setContentsMargins(20, 20, 20, 20);
 
         QWidget *formContainer = new QWidget(this);
         formContainer->setLayout(formLayout);
@@ -44,7 +59,7 @@ public:
 
         QVBoxLayout *mainLayout = new QVBoxLayout;
         mainLayout->addWidget(formContainer);
-        mainLayout->setAlignment(Qt::AlignCenter); 
+        mainLayout->setAlignment(Qt::AlignCenter);
         setLayout(mainLayout);
 
         formContainer->setFixedSize(300, 200);
@@ -64,20 +79,64 @@ private slots:
         QString password = passwordInput->text();
         qDebug() << "Email:" << email;
         qDebug() << "Password:" << password;
+
+        QStringList arguments;
+        arguments << "start.py" << email << password;
+
+        process->start("python3", arguments);
+
+        connect(process, &QProcess::readyReadStandardOutput, [this]() {
+            qDebug() << "Output:" << process->readAllStandardOutput();
+        });
+
+        connect(process, &QProcess::readyReadStandardError, [this]() {
+            qDebug() << "Error:" << process->readAllStandardError();
+        });
+
+        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [this](int exitCode, QProcess::ExitStatus exitStatus) {
+            if (exitStatus == QProcess::CrashExit) {
+                qDebug() << "Process crashed with exit code:" << exitCode;
+            } else {
+                qDebug() << "Process finished with exit code:" << exitCode;
+            }
+            qDebug() << "Exiting application...";
+            QApplication::quit();
+        });
+
+        if (!process->waitForStarted()) {
+            qDebug() << "Failed to start process:" << process->errorString();
+            QApplication::quit(); 
+        } else {
+            qDebug() << "Process started successfully.";
+        }
     }
 
     void ensureWindowOnTop() {
         setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
-        show(); 
+        show();
     }
 
 private:
     QLineEdit *emailInput;
     QLineEdit *passwordInput;
+    QProcess *process;  
 };
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+
+    app.setStyleSheet("QPushButton {"
+                      "    background-color: #e0e0e0;"
+                      "    border: 1px solid #ccc;"
+                      "    padding: 10px;"
+                      "    font-size: 16px;"
+                      "}"
+                      "QPushButton:hover {"
+                      "    background-color: #d0d0d0;"
+                      "}"
+                      "QPushButton:pressed {"
+                      "    background-color: #c0c0c0;"
+                      "}");
 
     LoginWindow loginWindow;
     loginWindow.show();

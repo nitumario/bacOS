@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.secret_key = 'test'
 db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
-ip = '192.168.0.80'
+ip = '192.168.0.54'
 
 def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
     if isinstance(value, str):
@@ -114,7 +114,19 @@ def creare():
     else:
         return redirect(url_for('login'))
 
+@app.route('/loginapi', methods=['POST'])
+def loginapi():
+    email = request.form.get('email')
+    password = request.form.get('password')
 
+    query = "SELECT * FROM users WHERE email = %s AND password = %s"
+    cursor.execute(query, (email, password))
+    result = cursor.fetchone()
+    
+    if result:
+        return jsonify({'OK': 'user found'}), 200
+    else:
+        return jsonify({'error': 'user not found'}), 401
 
 @app.route('/api/event/<int:id>', methods=['GET'])
 def api_event(id):
