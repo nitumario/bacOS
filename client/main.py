@@ -5,7 +5,7 @@ import datetime
 import subprocess
 import time
 
-url = 'http://192.168.0.54/'
+url = 'http://192.168.0.234/'
 
 if __name__ == "__main__":
     code = sys.argv[1]
@@ -31,6 +31,7 @@ if __name__ == "__main__":
     finally:
         process.terminate()
         process.wait()  
+            
 
     folder_path = '/home/participanti'
     if os.path.isdir(folder_path):
@@ -40,7 +41,6 @@ if __name__ == "__main__":
             subiecte = requests.get(url + 'subiecte/' + code).json()
             subiecte_wpath = []
             cpp_file_paths = []
-
             for subiect in subiecte:
                 subiect_url = url + 'event/' + code + '/' + subiect
                 response = requests.get(subiect_url)
@@ -51,18 +51,34 @@ if __name__ == "__main__":
                         file.write(subiect_content)
                     subiecte_wpath.append(subiect_path)
                     
-                    # Create empty .cpp file
+                    # Create the corresponding .cpp file
                     cpp_path = os.path.splitext(subiect_path)[0] + ".cpp"
                     with open(cpp_path, 'w') as cpp_file:
-                        cpp_file.write("")  # Write nothing to create an empty file
+                        cpp_file.write("// Start writing your solution here\n")
                     cpp_file_paths.append(cpp_path)
         
             file_paths_str = " ".join([os.path.abspath(path) for path in cpp_file_paths])
 
+            # Example output
             print("Generated cpp file paths:")
             print(file_paths_str)
 
     durata = requests.get(url + 'durata/' + code).json()
     compiler = requests.get(url + 'compiler/' + code).json()
+    print(durata)
     if compiler == 1:
+        pdf_viewer = subprocess.Popen(["xpdf", *subiecte_wpath], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         ide = subprocess.Popen(["codeblocks", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(int(durata)*60)
+        ide.terminate()
+        pdf_viewer.terminate()
+        pdf_viewer.wait()
+        ide.wait()
+    else:
+        ide = subprocess.Popen(["gedit", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        pdf_viewer = subprocess.Popen(["xpdf", *subiecte_wpath], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(int(durata)*60)
+        ide.terminate()
+        pdf_viewer.terminate()
+        pdf_viewer.wait()
+        ide.wait()

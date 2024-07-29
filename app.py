@@ -5,11 +5,12 @@ import json
 from datetime import datetime
 import uuid
 
+ip = '192.168.0.234'
 app = Flask(__name__)
 app.secret_key = 'test'
-db = MySQLdb.connect(host="localhost", user="mario", passwd="toor", db="bacOS")
+db = MySQLdb.connect(host=ip, user="mario", passwd="toor", db="bacOS")
 cursor = db.cursor()
-ip = '192.168.0.54'
+
 
 def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
     if isinstance(value, str):
@@ -18,6 +19,12 @@ def datetimeformat(value, format='%Y-%m-%dT%H:%M'):
     return value
 
 app.jinja_env.filters['datetimeformat'] = datetimeformat
+
+
+
+@app.route('/')
+def home():
+    return redirect(url_for('events'))
 
 
 
@@ -36,6 +43,7 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
         type = request.form.get('type')
+        print("adding user:", username, email, password, type)
         if type == 'on':
             type = 'asteapta aprobare'
         else:
@@ -67,13 +75,14 @@ def login():
         query = "SELECT * FROM users WHERE email = %s AND password = %s"
         cursor.execute(query, (email, password))
         result = cursor.fetchone()
+        print(result)
         
         if result:
             session['logged_in'] = True
             session['uuid'] = result[5]
             session['type'] = result[3]
             print("user: ", session['uuid'], "with type: ", session['type'])
-            return redirect(url_for('events.html'))
+            return redirect(url_for('events'))
         else:
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
@@ -230,7 +239,7 @@ def events():
     events = cursor.fetchall()
     events_with_ids = [(event[1], event[0]) for event in events]
 
-    return render_template('events.html', events_with_ids=events_with_ids, username=username)
+    return render_template('events.html', events_with_ids=events_with_ids )
 
 
 
@@ -248,10 +257,9 @@ def event(id):
         'subiecte': os.listdir(f"events\\{id}")
     }
     #sa fie pt profesori if ul ca sa fie else ul pt elevi
-    if 'logged_in' in session and session['logged_in']:
+    if 'logged_in' in session and session['logged_in'] and session['type'] == 'profesor':
         return render_template('event.html', event_data=event_data)
     else:
-        print("meow")
         return render_template('event_uneditable.html', event_data=event_data, readonly=True, punctaj=punctaj)
 
 

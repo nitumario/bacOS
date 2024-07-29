@@ -76,7 +76,7 @@ private slots:
         });
 
         QStringList arguments;
-        arguments << "main.py" << code;
+        arguments << "start.py" << code;
         process->start("python3", arguments);
 
         if (!process->waitForStarted()) {

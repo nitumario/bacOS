@@ -298,21 +298,21 @@
 	<div class="form-container sign-up-container">
 		<form action="/register" method="post">
 			<h1>Creează contul</h1>
-			<input type="text" placeholder="Nume" />
-			<input type="email" placeholder="Email" />
-			<input type="password" placeholder="Parolă" />
+			<input type="text" name="username" placeholder="Nume" />
+			<input type="email" name="email" placeholder="Email" />
+			<input type="password" name="password" placeholder="Parolă" />
             <label class="casuta">Profesor
-                <input type="checkbox" checked="checked">
+                <input type="checkbox" name="type"   checked="1">
                 <span class="checkmark"></span>
             </label>
             <button onclick="window.location.href='/events'">Creează un cont</button>
 		</form>
 	</div>
 	<div class="form-container sign-in-container">
-		<form action="#">
+		<form action="/login" method="post">
 			<h1>Intră în cont</h1>
-			<input type="email" placeholder="Email" />
-			<input type="password" placeholder="Parolă" />
+			<input type="email" name="email" placeholder="Email" />
+			<input type="password" name="password" placeholder="Parolă" />
 			<a href="#">Ai uitat parola?</a>
             <button>Intră în cont</button>
             <a href="/events">Continuă ca vizitator</a>
