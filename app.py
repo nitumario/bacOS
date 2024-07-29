@@ -164,8 +164,14 @@ def compiler(id):
 @app.route('/startdatetime/<int:id>', methods=['GET'])
 def startdatetime(id):
     cursor.execute("SELECT startdatetime FROM events WHERE id = %s", (id,))
-    startdatetime = cursor.fetchone()
-    return jsonify(startdatetime[0])
+    result = cursor.fetchone()
+
+    # Check if result is not None
+    if result:
+        startdatetime = result[0]  # This should be a datetime object
+        # Format datetime as 'YYYY-MM-DD HH:MM:SS'
+        formatted_startdatetime = startdatetime.strftime('%Y-%m-%d %H:%M:%S')
+        return jsonify(formatted_startdatetime)
 
 @app.route('/gentest/<int:id>', methods=['GET', 'POST'])
 def gentest(id):
