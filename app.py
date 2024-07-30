@@ -281,6 +281,7 @@ def events():
 
 @app.route('/event/<id>', methods=['GET', 'POST'])
 def event(id):
+    print(session['mail'])
     cursor.execute("SELECT punctaj FROM punctaj WHERE event_id = %s AND username = %s", (id, session['mail']))
     punctaj = cursor.fetchone()
     print(punctaj)
