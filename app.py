@@ -4,6 +4,7 @@ import os
 import json
 from datetime import datetime
 import uuid
+import subprocess
 
 ip = '192.168.0.234'
 app = Flask(__name__)
@@ -30,10 +31,12 @@ def upload():
     user = request.form.get('user')
     event = request.form.get('event')
     for file in files:
-        file_path = os.path.join('rezolvari', event, user, file.filename)
+        file_path = os.path.join('rezolvari', user, file.filename)
         if not os.path.isdir(os.path.dirname(file_path)):
             os.makedirs(os.path.dirname(file_path))
         file.save(file_path)
+    subprocess.run('python3 /rezolvari/tests.py ' + event + ' ' + user)
+
     return ' ', 200
 
 
@@ -72,7 +75,7 @@ def register():
         db.commit()
         flash('Account created successfully', 'success')
         
-
+        session['mail'] = email
         session['logged_in'] = True
         session['uuid'] = user_uuid
         session['type'] = type
@@ -98,6 +101,7 @@ def login():
         if result:
             session['logged_in'] = True
             session['uuid'] = result[5]
+            session['mail'] = email
             session['type'] = result[3]
             print("user: ", session['uuid'], "with type: ", session['type'])
             return redirect(url_for('events'))
@@ -188,6 +192,13 @@ def compiler(id):
     compiler = cursor.fetchone()
     return jsonify(compiler[0])
 
+
+@app.route('/tests/<int:id>', methods=['GET'])
+def tests(id):
+    cursor.execute("SELECT teste FROM events WHERE id = %s", (id,))
+    tests = cursor.fetchone()
+    return jsonify(tests[0])
+
 @app.route('/startdatetime/<int:id>', methods=['GET'])
 def startdatetime(id):
     cursor.execute("SELECT startdatetime FROM events WHERE id = %s", (id,))
@@ -263,7 +274,11 @@ def events():
 
 @app.route('/event/<id>', methods=['GET', 'POST'])
 def event(id):
-    punctaj = 100
+    cursor.execute("SELECT punctaj FROM punctaj WHERE event_id = %s AND username = %s", (id, session['mail']))
+    punctaj = cursor.fetchone()
+    print(punctaj)
+
+
     cursor.execute("SELECT * FROM events WHERE id = %s", (id,))
     event = cursor.fetchone()
     event_data = {
