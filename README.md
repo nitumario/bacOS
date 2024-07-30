@@ -1,3 +1,28 @@
+biblioteci folosite:
+Flask
+subprocess
+uuid
+datetime
+json
+os
+MySQLdb
+sys
+urllib.request
+argparse
+
+
+impartirea taskurilor:
+Nitu Mario - BackEnd, OS, client
+Vlad Grigorescu - FrontEnd
+
+
+
+
+
+
+
+
+
 📚 bacOS
 
 🚩 Problemă Identificată
