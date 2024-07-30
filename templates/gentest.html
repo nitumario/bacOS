@@ -3,19 +3,19 @@
 
 <style>
     form {
-        display: block; /* Hidden by default */
-        position: fixed; /* Fixed position to overlay the page */
+        display: block;
+        position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%); /* Center the modal */
-        background-color: #fff; /* White background */
-        border-radius: 20px; /* Rounded corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        padding: 20px; /* Inner padding */
-        z-index: 1000; /* Positioned above the overlay */
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        z-index: 1000;
         width: 100%;
-        max-width: 600px; /* Max width for the modal */
-        overflow: auto; /* Enable scrolling if content overflows */
+        max-width: 600px;
+        overflow: auto;
         align-items: center;
     }
 
@@ -69,7 +69,7 @@
         <input type="text" id="input" name="input" placeholder="Input" required>
 
         <label for="expected_output"></label>
-        <input type="text" id="expected_output" name="expected_output" placeholder="Input-ul asteptat" required>
+        <input type="text" id="expected_output" name="expected_output" placeholder="Output-ul asteptat" required>
 
         <label for="punctaj"></label>
         <input type="number" id="punctaj" name="punctaj" placeholder="Punctaj" required>
