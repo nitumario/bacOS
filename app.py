@@ -22,6 +22,24 @@ app.jinja_env.filters['datetimeformat'] = datetimeformat
 
 
 
+
+
+@app.route('/upload-api', methods=['POST'])
+def upload():
+    files = request.files.getlist('files')
+    user = request.form.get('user')
+    event = request.form.get('event')
+    for file in files:
+        file_path = os.path.join('rezolvari', event, user, file.filename)
+        if not os.path.isdir(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
+        file.save(file_path)
+    return ' ', 200
+
+
+
+
+
 @app.route('/')
 def home():
     return redirect(url_for('events'))

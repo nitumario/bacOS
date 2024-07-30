@@ -37,6 +37,7 @@ if __name__ == "__main__":
     if os.path.isdir(folder_path):
         folder_list = os.listdir(folder_path)
         if len(folder_list) == 1 and os.path.isdir(os.path.join(folder_path, folder_list[0])):
+            user = folder_list[0]
             workspace = os.path.join(folder_path, folder_list[0])
             subiecte = requests.get(url + 'subiecte/' + code).json()
             subiecte_wpath = []
@@ -51,15 +52,13 @@ if __name__ == "__main__":
                         file.write(subiect_content)
                     subiecte_wpath.append(subiect_path)
                     
-                    # Create the corresponding .cpp file
                     cpp_path = os.path.splitext(subiect_path)[0] + ".cpp"
                     with open(cpp_path, 'w') as cpp_file:
-                        cpp_file.write("// Start writing your solution here\n")
+                        cpp_file.write("// Scrie solutia in acest fisier\n")
                     cpp_file_paths.append(cpp_path)
         
             file_paths_str = " ".join([os.path.abspath(path) for path in cpp_file_paths])
 
-            # Example output
             print("Generated cpp file paths:")
             print(file_paths_str)
 
@@ -69,7 +68,7 @@ if __name__ == "__main__":
     if compiler == 1:
         pdf_viewer = subprocess.Popen(["xpdf", *subiecte_wpath], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         ide = subprocess.Popen(["codeblocks", *cpp_file_paths], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        time.sleep(int(durata)*60)
+        #time.sleep(int(durata)*60)
         ide.terminate()
         pdf_viewer.terminate()
         pdf_viewer.wait()
@@ -82,3 +81,17 @@ if __name__ == "__main__":
         pdf_viewer.terminate()
         pdf_viewer.wait()
         ide.wait()
+
+    
+    message = {
+        'user': user,
+        'event': code,
+    }
+    files = [('files', open(file_path, 'rb')) for file_path in cpp_file_paths]
+
+    response = requests.post(url, data=message, files=files)
+
+
+    for _, file in files:
+        file.close()
+
