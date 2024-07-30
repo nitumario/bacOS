@@ -156,13 +156,13 @@ def creare():
 @app.route('/loginapi', methods=['POST'])
 def loginapi():
     email = request.form.get('email')
-    password = request.form.get('password')
+    password = request.form.get('password').encode('utf-8')
 
-    query = "SELECT * FROM users WHERE email = %s AND password = %s"
-    cursor.execute(query, (email, password))
+    query = "SELECT * FROM users WHERE email = %s"
+    cursor.execute(query, (email,))
     result = cursor.fetchone()
     
-    if result:
+    if result and bcrypt.checkpw(password, result[2].encode('utf-8')):
         return jsonify({'OK': 'user found'}), 200
     else:
         return jsonify({'error': 'user not found'}), 401
