@@ -20,9 +20,9 @@ public:
 
         QLabel *codeLabel = new QLabel("Introduceți codul competiției:", this);
         codeInput = new QLineEdit(this);
-        codeInput->setPlaceholderText("Enter competition code");
+        codeInput->setPlaceholderText("Introdu codul evenimentului");
 
-        submitButton = new QPushButton("Submit", this);
+        submitButton = new QPushButton("Mai departe", this);
         connect(submitButton, &QPushButton::clicked, this, &CompetitionCodeWindow::onSubmitClicked);
 
         QVBoxLayout *formLayout = new QVBoxLayout;
@@ -73,7 +73,7 @@ private slots:
             } else {
                 qDebug() << "Process finished with exit code:" << exitCode;
             }
-            QApplication::quit(); // Quit the application after process finishes
+            QApplication::quit();
         });
 
         QStringList arguments;
@@ -82,10 +82,10 @@ private slots:
 
         if (!process->waitForStarted()) {
             qDebug() << "Failed to start process:" << process->errorString();
-            QApplication::quit(); // Quit the application if process fails to start
+            QApplication::quit();
         } else {
             qDebug() << "Process started successfully.";
-            this->hide(); // Hide the window after the button is clicked
+            this->hide();
         }
     }
 
