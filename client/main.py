@@ -33,7 +33,7 @@ if __name__ == "__main__":
         process.wait()  
             
 
-    folder_path = '/home/participanti'
+    folder_path = '/home/participant'
     if os.path.isdir(folder_path):
         folder_list = os.listdir(folder_path)
         if len(folder_list) == 1 and os.path.isdir(os.path.join(folder_path, folder_list[0])):

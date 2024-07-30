@@ -67,12 +67,13 @@ private slots:
             qDebug() << "Error:" << process->readAllStandardError();
         });
 
-        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [process](int exitCode, QProcess::ExitStatus exitStatus) {
+        connect(process, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [this](int exitCode, QProcess::ExitStatus exitStatus) {
             if (exitStatus == QProcess::CrashExit) {
                 qDebug() << "Process crashed with exit code:" << exitCode;
             } else {
                 qDebug() << "Process finished with exit code:" << exitCode;
             }
+            QApplication::quit(); // Quit the application after process finishes
         });
 
         QStringList arguments;
@@ -81,11 +82,11 @@ private slots:
 
         if (!process->waitForStarted()) {
             qDebug() << "Failed to start process:" << process->errorString();
+            QApplication::quit(); // Quit the application if process fails to start
         } else {
             qDebug() << "Process started successfully.";
+            this->hide(); // Hide the window after the button is clicked
         }
-
-        QTimer::singleShot(500, qApp, &QApplication::quit); 
     }
 
     void ensureWindowOnTop() {
@@ -113,7 +114,7 @@ int main(int argc, char *argv[]) {
                       "QPushButton:pressed {"
                       "    background-color: #c0c0c0;"
                       "}");
-
+ff
     CompetitionCodeWindow competitionCodeWindow;
     competitionCodeWindow.show();
 

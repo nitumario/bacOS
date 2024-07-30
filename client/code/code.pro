@@ -1,5 +1,5 @@
 TEMPLATE = app
-TARGET = login
+TARGET = code
 CONFIG += c++11
 QT += widgets
 SOURCES += main.cpp
