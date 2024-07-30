@@ -5,36 +5,35 @@
     <title>Editeaza evenimentul - {{ event_data.nume }}</title>
     <style>
         form {
-            display: block; /* Display form as a block */
-            position: fixed; /* Fixed position to overlay the page */
+            display: block;
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Center the modal */
-            background-color: #fff; /* White background */
-            border-radius: 20px; /* Rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            padding: 20px; /* Inner padding */
-            z-index: 1000; /* Positioned above the overlay */
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1000;
             width: 100%;
-            max-width: 600px; /* Max width for the modal */
-            overflow: auto; /* Enable scrolling if content overflows */
+            max-width: 600px;
+            overflow: auto;
             align-items: center;
         }
-        
-        /* Styling for overlay and container */
+
         #overlay {
-            display: none; /* Hidden by default */
-            position: fixed; /* Fixed position to overlay the page */
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-            z-index: 1000; /* Positioned above the page content */
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
         }
 
         #edit-container {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             top: 50%;
             left: 50%;
@@ -43,7 +42,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 1001; /* Above overlay */
+            z-index: 1001;
             max-width: 600px;
             width: 80%;
         }
@@ -99,8 +98,8 @@
 
         .compilator {
             display: flex;
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
+            justify-content: center;
+            align-items: center;
             margin-bottom: 10px;
             box-sizing: border-box;
             width: 75%;
@@ -109,17 +108,15 @@
             border-radius: 10px;
         }
 
-        /* Style for the checkbox */
         #compiler {
             height: 17px;
             width: 17px;
-            margin-right: 5px; /* Space between checkbox and text */
-            cursor: pointer; /* Change cursor to pointer when hovering */
+            margin-right: 5px;
+            cursor: pointer;
             justify-content: center;
             align-items: center;
         }
 
-        /* Style for the label */
         #text-compilator {
             font-family: "Google Sans", Roboto, Arial, sans-serif;
             color: #4785d9;
@@ -138,9 +135,9 @@
             margin-left: 70px;
             align-items: center;
             justify-content: center;
-            text-align: center; /* Center align the text within the group */
-            max-height: 140px; /* Set a max height for the box */
-            overflow-y: auto; /* Enable vertical scrolling */
+            text-align: center;
+            max-height: 140px;
+            overflow-y: auto;
         }
 
         .subiecte-grupare a {
@@ -160,8 +157,8 @@
             font-family: "Google Sans", Roboto, Arial, sans-serif;
             color: #4785d9;
             font-size: 30px;
-            margin: 0 auto; /* Ensure block elements are centered */
-            text-align: center; /* Center align the h2 text */
+            margin: 0 auto;
+            text-align: center;
             margin-bottom: 20px;
         }
 
@@ -169,8 +166,8 @@
             font-family: "Google Sans", Roboto, Arial, sans-serif;
             color: #000000;
             font-size: 20px;
-            margin: 0 auto; /* Ensure block elements are centered */
-            text-align: center; /* Center align the h2 text */
+            margin: 0 auto;
+            text-align: center;
             font-weight: bold;
         }
 
@@ -193,7 +190,7 @@
         
         <p>
             <label for="durata"></label>
-            <input type="number" id="durata" name="durata" value="{{ event_data.durata }}">
+            <input type="number" id="durata" name="durata" value="{{ event_data.durata }}" placeholder="Durată">
         </p>
         
         <p>
@@ -212,8 +209,8 @@
         </div>
 
         <p>
-            <button type="button" id="open-edit-form">Genereaza teste de compilare</button>
-            <input type="submit" value="Salveaza schimbarile" onclick="window.location.href='/events/'">
+            <button type="button" id="open-edit-form">Generează teste de compilare</button>
+            <input type="submit" value="Salvează schimbările" onclick="window.location.href='/events/'">
         </p>
 
     </form>

@@ -5,19 +5,19 @@
     <title>Profil</title>
     <style>
         form {
-            display: block; /* Display form as a block */
-            position: fixed; /* Fixed position to overlay the page */
+            display: block;
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Center the modal */
-            background-color: #fff; /* White background */
-            border-radius: 20px; /* Rounded corners */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-            padding: 20px; /* Inner padding */
-            z-index: 1000; /* Positioned above the overlay */
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1000;
             width: 100%;
-            max-width: 600px; /* Max width for the modal */
-            overflow: auto; /* Enable scrolling if content overflows */
+            max-width: 600px;
+            overflow: auto;
             align-items: center;
             text-align: center;
             font-family: "Google Sans", Roboto, Arial, sans-serif;
@@ -81,10 +81,10 @@
     <form method="POST" id="editUserForm">
         <h2>Profil</h2>
         <div class="form-group">
-            <input type="text" id="username" name="username" value="{{ user_data.username }}" required>
+            <input type="text" id="username" name="username" value="{{ user_data.username }}" placeholder="Nume" required>
         </div>
         <div class="form-group">
-            <input type="email" id="email" name="email" value="{{ user_data.email }}" required>
+            <input type="email" id="email" name="email" value="{{ user_data.email }}" placeholder="Email" required>
         </div>
 
         <button type="submit" class="btn-cancel" id="submitButton">Anulează</button>
