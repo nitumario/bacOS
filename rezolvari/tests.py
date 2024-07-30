@@ -49,18 +49,24 @@ def run_tests(teste_data, folder_name):
                     print(f"Actual output: {actual_output}")
                     if actual_output == test_expected_output:
                         print(f"Test {test_name} passed")
-                        punctaj += punctaj_test
+                        punctaj += int(punctaj_test)
                     else:
                         print(f"Test {test_name} failed")
     print(f"Punctaj final: {punctaj}")
     return punctaj
+
+def get_part_after_last_backslash(input_string):
+    # Split the string by backslash and return the last part
+    parts = input_string.split('\\')
+    return parts[-1] if parts else input_string
 
 
 def main(subiect, username):
     teste_data = get_tests(subiect)
     punctaj = run_tests(teste_data, username)
     query = f"INSERT INTO punctaj (username, event_id, punctaj) VALUES (%s, %s, %s)"
-    cursor.execute(query, (username, subiect, punctaj))
+
+    cursor.execute(query, (get_part_after_last_backslash(username), subiect, punctaj))
     db.commit()
     print(f"Rezultatul a fost inregistrat cu succes pentru subiectul {subiect} si utilizatorul {username}")
 

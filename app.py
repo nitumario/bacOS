@@ -35,8 +35,10 @@ def upload():
         if not os.path.isdir(os.path.dirname(file_path)):
             os.makedirs(os.path.dirname(file_path))
         file.save(file_path)
-    subprocess.run('python3 /rezolvari/tests.py ' + event + ' ' + user)
-
+    file_path = r'C:\Users\m3m0r\Projects\bacOS\rezolvari\tests.py'
+    user_path = rf'C:\Users\m3m0r\Projects\bacOS\rezolvari\{user}'
+    print(user)
+    subprocess.run(['python3', file_path, event, user_path])
     return ' ', 200
 
 
@@ -115,7 +117,7 @@ def login():
 @app.route('/creare', methods=['GET', 'POST'])
 def creare():
     #modifica doar pt profesori
-    if 'logged_in' in session and session['logged_in']:
+    if 'logged_in' in session and session['logged_in'] and session['type'] == 'profesor':
         if request.method == 'POST':
             nume = request.form.get('nume')
             startdatetime = request.form.get('startdatetime')
@@ -143,7 +145,7 @@ def creare():
                 test.save(os.path.join(id, test.filename))
         return render_template('creare.html')
     else:
-        return redirect(url_for('login'))
+        return render_template('blocked.html')
 
 @app.route('/loginapi', methods=['POST'])
 def loginapi():
