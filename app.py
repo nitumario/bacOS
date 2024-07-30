@@ -6,7 +6,7 @@ from datetime import datetime
 import uuid
 import subprocess
 
-ip = '192.168.0.234'
+ip = '192.168.241.64'
 app = Flask(__name__)
 app.secret_key = 'test'
 db = MySQLdb.connect(host=ip, user="mario", passwd="toor", db="bacOS")

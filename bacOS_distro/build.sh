@@ -87,7 +87,7 @@ build_busybox() {
 # Install core
 install_rootfs() {
   cd $CURRENT_DIR
-  wget "https://github.com/nitumario/bacOS_distro/raw/main/root.zip"
+  wget "https://github.com/nitumario/bacOS_/raw/main/root.zip"
   unzip root.zip
   cd $BACOS_PATH
   rm -rf rootfs
