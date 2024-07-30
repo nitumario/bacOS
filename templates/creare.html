@@ -44,7 +44,7 @@
         background-color: #9888cd;
         cursor: pointer;
         margin-bottom: 10px;
-        width: 45%; /* Adjusted for horizontal layout */
+        width: 45%;
         padding: 10px;
         border-radius: 10px;
         box-sizing: border-box;
@@ -57,9 +57,9 @@
 
     .file-buttons {
         display: flex;
-        justify-content: space-between; /* Distribute space between buttons */
+        justify-content: space-between;
         width: 100%;
-        align-items: center; /* Center items vertically */
+        align-items: center;
     }
 
     .left-buttons, .right-buttons {
@@ -106,6 +106,24 @@
         color: #FFFFFF;
     }
 
+    .custom-text-button {
+        display: block;
+        padding: 10px 20px;
+        background-color: #FFFFFF;
+        color: #4785d9;
+        cursor: default;
+        text-align: center;
+        font-size: 15px;
+        transition: background-color 0.5s ease-in-out;
+        font-family: "Google Sans", Roboto, Arial, sans-serif;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+        width: 75%;
+        margin-left: 40px;
+        margin-top: 20px;
+        border-radius: 10px;
+    }
+
     .butoane-jos {
         display: flex;
         justify-content: space-between;
@@ -146,11 +164,10 @@
         border-radius: 10px;
     }
 
-    /* Container for the label and checkbox */
     .compilator {
         display: flex;
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
+        justify-content: center;
+        align-items: center;
         margin-bottom: 10px;
         box-sizing: border-box;
         width: 75%;
@@ -159,17 +176,15 @@
         border-radius: 10px;
     }
 
-    /* Style for the checkbox */
     #compiler {
         height: 17px;
         width: 17px;
-        margin-right: 5px; /* Space between checkbox and text */
-        cursor: pointer; /* Change cursor to pointer when hovering */
+        margin-right: 5px;
+        cursor: pointer;
         justify-content: center;
         align-items: center;
     }
 
-    /* Style for the label */
     #text-compilator {
         font-family: "Google Sans", Roboto, Arial, sans-serif;
         color: #4785d9;
@@ -191,7 +206,7 @@
         <input type="datetime-local" id="startdatetime" name="startdatetime" required>
     
         <label for="durata"></label>
-        <input type="number" id="durata" name="durata" placeholder="Durata" required>
+        <input type="number" id="durata" name="durata" placeholder="Durată(ore)" required>
     
         <div class="file-buttons">
             <div class="left-buttons">
@@ -199,8 +214,7 @@
                 <label for="subiecte" class="custom-file-button" id="custom-subiecte">Subiecte</label>
             </div>
             <div class="right-buttons">
-                <input type="file" id="teste" name="teste" multiple style="display:none;">
-                <label for="teste" class="custom-file-button" id="custom-teste">Teste</label>
+                <label for="teste" class="custom-text-button" id="custom-teste">*Generarea testelor se va realiza ulterior</label>
             </div>
         </div>
     
@@ -214,7 +228,7 @@
             </div>
 
             <div class="butoane-jos-dr">
-                <input type="submit" class="buton-submit" value="Creeaza eveniment">
+                <input type="submit" class="buton-submit" value="Creează eveniment">
             </div>
         </div>
     </form>
