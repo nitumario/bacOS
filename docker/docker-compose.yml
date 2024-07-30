@@ -5,6 +5,6 @@ services:
     build:
       context: .
       args:
-        CPP_FILE: ""  # Placeholder to be set dynamically
+        CPP_FILE: ""
     stdin_open: true
     tty: true
