@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  cpp-app:
+    build:
+      context: .
+      args:
+        CPP_FILE: ""
+    stdin_open: true
+    tty: true
