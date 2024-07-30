@@ -5,7 +5,7 @@ import datetime
 import subprocess
 import time
 
-url = 'http://192.168.0.234/'
+url = 'http://192.168.241.64/'
 
 if __name__ == "__main__":
     code = sys.argv[1]

@@ -1,7 +1,7 @@
 import os
 import sys
 import requests
-url = 'http://192.168.0.54/loginapi'
+url = 'http://192.168.241.64/loginapi'
 
 if __name__ == "__main__":
     email = sys.argv[1]
