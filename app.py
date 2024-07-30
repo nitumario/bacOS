@@ -5,6 +5,7 @@ import json
 from datetime import datetime
 import uuid
 import subprocess
+import bcrypt
 
 ip = '192.168.241.64'
 app = Flask(__name__)
@@ -59,21 +60,26 @@ def logout():
 
 
 
+import bcrypt
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
-        password = request.form.get('password')
+        password = request.form.get('password').encode('utf-8')  # Encode the password to bytes
         type = request.form.get('type')
-        print("adding user:", username, email, password, type)
+
+        # Generate a salt and hash the password
+        hashed_password = bcrypt.hashpw(password, bcrypt.gensalt())
+
         if type == 'on':
             type = 'asteapta aprobare'
         else:
             type = 'elev'
         user_uuid = uuid.uuid4()
         query = "INSERT INTO users (username, email, password, account_type, UUID) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(query, (username, email, password, type, user_uuid))
+        cursor.execute(query, (username, email, hashed_password, type, user_uuid))
         db.commit()
         flash('Account created successfully', 'success')
         
@@ -89,18 +95,18 @@ def register():
 
 
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
-        password = request.form.get('password')
+        password = request.form.get('password').encode('utf-8')
 
-        query = "SELECT * FROM users WHERE email = %s AND password = %s"
-        cursor.execute(query, (email, password))
+        query = "SELECT * FROM users WHERE email = %s"
+        cursor.execute(query, (email,))
         result = cursor.fetchone()
-        print(result)
         
-        if result:
+        if result and bcrypt.checkpw(password, result[2].encode('utf-8')):
             session['logged_in'] = True
             session['uuid'] = result[5]
             session['mail'] = email
@@ -111,7 +117,7 @@ def login():
             flash('Invalid credentials', 'error')
             return redirect(url_for('login'))
     return render_template('login.html')
-    
+
 
 
 @app.route('/creare', methods=['GET', 'POST'])
@@ -206,7 +212,6 @@ def startdatetime(id):
     cursor.execute("SELECT startdatetime FROM events WHERE id = %s", (id,))
     result = cursor.fetchone()
 
-    # Check if result is not None
     if result:
         startdatetime = result[0]  # This should be a datetime object
         # Format datetime as 'YYYY-MM-DD HH:MM:SS'
