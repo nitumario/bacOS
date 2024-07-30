@@ -7,7 +7,6 @@ if (-not $FolderName) {
     exit 1
 }
 
-# Define paths based on the provided folder name
 $jsonFile = "$FolderName/tests.json"
 $cppFolder = "$FolderName/cpp-files"
 $dockerComposeFile = "docker-compose.yml"
@@ -22,7 +21,6 @@ if (-not (Test-Path $cppFolder)) {
     exit 1
 }
 
-# Read each test case from the JSON file
 $testCases = Get-Content $jsonFile | ConvertFrom-Json
 
 foreach ($testCase in $testCases) {
@@ -32,31 +30,28 @@ foreach ($testCase in $testCases) {
     $expectedOutput = $testCase.expected_output
     $punctaj = [int]$testCase.punctaj
 
-    Write-Output "Testing $cppFile"
+    Write-Output "Testare $cppFile"
 
-    # Build Docker image for the current C++ file
-    Write-Output "Building Docker image for $cppFile"
+    Write-Output "Construire docker image pentru $cppFile"
     docker-compose build --build-arg "CPP_FILE=$cppFile" | Tee-Object -FilePath "$FolderName/build-$id.log"
 
-    # Initialize score
     $score = 0
 
-    Write-Output "Testing input: $input"
-
-    # Run the Docker container with the input using docker-compose
+    Write-Output "Test input $input"
+    
     $actualOutput = (echo $input | docker-compose run --rm cpp-app) -replace "`r`n", "`n"
 
-    Write-Output "Expected output: $expectedOutput"
-    Write-Output "Actual output: $actualOutput"
+    Write-Output "Output asteptat: $expectedOutput"
+    Write-Output "Output actual: $actualOutput"
 
     if ($actualOutput.Trim() -eq $expectedOutput.Trim()) {
-        Write-Output "Test passed!"
+        Write-Output "Ok!"
         $score += $punctaj
     } else {
-        Write-Output "Test failed!"
+        Write-Output "Nu e ok!"
     }
     Write-Output ""
 
-    Write-Output "${cppFile}: Final score = $score"
+    Write-Output "${cppFile}: Punctaj = $score"
     Write-Output ""
 }
