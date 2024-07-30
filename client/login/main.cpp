@@ -20,28 +20,28 @@ public:
 
         QLabel *emailLabel = new QLabel("Email:", this);
         emailInput = new QLineEdit(this);
-        emailInput->setPlaceholderText("Enter your email");
+        emailInput->setPlaceholderText("Introdu-ti mail-ul");
 
-        QLabel *passwordLabel = new QLabel("Password:", this);
+        QLabel *passwordLabel = new QLabel("Parola:", this);
         passwordInput = new QLineEdit(this);
-        passwordInput->setPlaceholderText("Enter your password");
+        passwordInput->setPlaceholderText("Introdu parola");
         passwordInput->setEchoMode(QLineEdit::Password);
 
-        QPushButton *loginButton = new QPushButton("Login", this);
+        QPushButton *loginButton = new QPushButton("Intră în cont", this);
         connect(loginButton, &QPushButton::clicked, this, &LoginWindow::onLoginClicked);
 
         loginButton->setStyleSheet(
             "QPushButton {"
-            "    background-color: #e0e0e0;"   // Default background color
-            "    border: 1px solid #ccc;"       // Border color
-            "    padding: 10px;"                // Padding around the text
-            "    font-size: 16px;"              // Font size
+            "    background-color: #e0e0e0;"
+            "    border: 1px solid #ccc;"
+            "    padding: 10px;"
+            "    font-size: 16px;"
             "}"
             "QPushButton:hover {"
-            "    background-color: #d0d0d0;"   // Darken background color on hover
+            "    background-color: #d0d0d0;"
             "}"
             "QPushButton:pressed {"
-            "    background-color: #c0c0c0;"   // Further darken background color when pressed
+            "    background-color: #c0c0c0;"
             "}");
 
         QVBoxLayout *formLayout = new QVBoxLayout;
