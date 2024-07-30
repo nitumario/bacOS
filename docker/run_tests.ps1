@@ -3,7 +3,7 @@ param (
 )
 
 if (-not $FolderName) {
-    Write-Error "You must provide a folder name."
+    Write-Error "Trebuie sa precizezi si folder-ul"
     exit 1
 }
 
