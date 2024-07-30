@@ -89,7 +89,7 @@ if __name__ == "__main__":
     }
     files = [('files', open(file_path, 'rb')) for file_path in cpp_file_paths]
 
-    response = requests.post(url, data=message, files=files)
+    response = requests.post(url + 'upload-api', data=message, files=files)
 
 
     for _, file in files:
